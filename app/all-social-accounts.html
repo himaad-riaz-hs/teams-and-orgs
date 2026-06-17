@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Suite Settings · Admin settings → All social accounts (faithful org-scoped list, staging parity) -->
+<!-- Suite Settings · Admin settings → All social accounts (canonical Social accounts page; table + private accounts woven in) -->
 <html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,6 +25,14 @@
   .list-panel h2 { font: var(--hs-type-title-sub); margin:0 0 6px; }
   .learn-link { display:inline-block; margin-bottom:18px; color:var(--bento-theme-color-text-link); font:var(--hs-type-body-md); text-decoration:none; }
   .learn-link:hover { text-decoration:underline; }
+
+  /* Destination tabs (Lens 1, primary — per Hill: All/Team/Private above connection status). HeaderTabs. */
+  .hs-tabs .hs-tab { text-decoration: none !important; cursor:pointer; }
+  .hs-tabs .hs-tab.is-active::after { background: var(--bento-theme-color-text-base) !important; left:0 !important; right:0 !important; }
+  .dest-tabs { margin-bottom: 12px; }
+  .dest-tabs .hs-tab { display:inline-flex; align-items:center; gap:6px; }
+  .dest-tabs .hs-tab .material-symbols-outlined { font-size:18px; }
+
   .toolbar { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
   .searchbar { display:flex; align-items:center; gap:8px; border:1px solid var(--bento-theme-color-border-base); border-radius:8px; padding:0 12px; height:48px; box-sizing:border-box; flex:0 1 420px; background:var(--bento-theme-color-bg-surface); }
   .searchbar .material-symbols-outlined { color:var(--bento-theme-color-icon-subtle); font-size:20px; }
@@ -46,7 +54,12 @@
   .sa-av .netbadge { position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:999px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); display:grid; place-items:center; }
   .sa-av .netbadge .material-symbols-outlined { font-size:11px; color:var(--bento-theme-color-icon-base); }
   .sa-av .netbadge img { width:11px; height:11px; display:block; }
+  /* Team column: team name for team accounts; "Private · only you" for private (this is how a private account reads in the table) */
+  .team-cell { display:inline-flex; align-items:center; gap:6px; color:var(--bento-theme-color-text-base); }
+  .team-cell .material-symbols-outlined { font-size:18px; color:var(--bento-theme-color-icon-base); }
+  .team-cell.priv { color:var(--bento-theme-color-text-subtle); }
   .subtle { color:var(--bento-theme-color-text-subtle); }
+  #noMatch td { text-align:center; color:var(--bento-theme-color-text-subtle); padding:28px; }
 </style>
 </head>
 <body>
@@ -101,6 +114,14 @@
     <div class="list-panel">
       <h2>61 social accounts in Publisher Organization</h2>
       <a class="learn-link" href="#">Learn how to connect social accounts</a>
+
+      <!-- Lens 1 (destination) = primary, per Hill's review (All/Team/Private ABOVE connection status). Status is a secondary filter below. -->
+      <nav class="hs-tabs dest-tabs" aria-label="Account destination" id="destTabs">
+        <a class="hs-tab is-active" role="button" tabindex="0" data-owner="all" aria-current="page">All</a>
+        <a class="hs-tab" role="button" tabindex="0" data-owner="team"><span class="material-symbols-outlined" aria-hidden="true">groups</span>Team</a>
+        <a class="hs-tab" role="button" tabindex="0" data-owner="private"><span class="material-symbols-outlined" aria-hidden="true">lock</span>Private</a>
+      </nav>
+
       <div class="toolbar">
         <div class="searchbar"><span class="material-symbols-outlined">search</span><input type="search" placeholder="Search for social accounts" aria-label="Search for social accounts"></div>
         <div style="flex:1"></div>
@@ -109,29 +130,64 @@
       </div>
       <table>
         <thead><tr>
-          <th style="width:44%" scope="col" aria-sort="ascending"><span class="sort">Social account <span class="material-symbols-outlined">arrow_drop_up</span></span></th>
-          <th scope="col">Added on</th><th scope="col">Status</th><th scope="col" style="text-align:right">Actions</th>
+          <th style="width:32%" scope="col" aria-sort="ascending"><span class="sort">Social account <span class="material-symbols-outlined">arrow_drop_up</span></span></th>
+          <th scope="col">Team</th><th scope="col">Added on</th><th scope="col">Status</th><th scope="col" style="text-align:right">Actions</th>
         </tr></thead>
         <tbody>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/linkedin.svg" alt=""></span></span><a href="social-account-detail.html">Alex T</a></div></td><td class="subtle">Jan 13, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/facebook.svg" alt=""></span></span><a href="social-account-detail.html">AlexT FB Native Sched Page</a></div></td><td class="subtle">Jan 13, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/facebook.svg" alt=""></span></span><a href="social-account-detail.html">AlexT Hoot Shop</a></div></td><td class="subtle">Jan 13, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">tag</span></span></span><a href="social-account-detail.html">annie hoot</a></div></td><td class="subtle">Apr 6, 2021</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span><a href="social-account-detail.html">anniew0436</a></div></td><td class="subtle">Apr 8, 2021</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/linkedin.svg" alt=""></span></span><a href="social-account-detail.html">Another Owl Mail</a></div></td><td class="subtle">Mar 24, 2023</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span><a href="social-account-detail.html">anotherowlmail</a></div></td><td class="subtle">Mar 6, 2023</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/facebook.svg" alt=""></span></span><a href="social-account-detail.html">Bonsai trees are us</a></div></td><td class="subtle">Nov 7, 2019</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">tag</span></span></span><a href="social-account-detail.html">Northwind Social</a></div></td><td class="subtle">Feb 4, 2021</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
-          <tr><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/linkedin.svg" alt=""></span></span><a href="social-account-detail.html">DevtestCo 1236</a></div></td><td class="subtle">Oct 1, 2025</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="private"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span><a href="social-account-detail.html?owner=private">@robin-personal.bsky.social</a></div></td><td><span class="team-cell priv"><span class="material-symbols-outlined">lock</span>Private · only you</span></td><td class="subtle">May 2, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="private"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span><a href="social-account-detail.html?owner=private">@robin.bsky.social</a></div></td><td><span class="team-cell priv"><span class="material-symbols-outlined">lock</span>Private · only you</span></td><td class="subtle">May 2, 2026</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="private"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span><a href="social-account-detail.html?owner=private">@robin.creates</a></div></td><td><span class="team-cell priv"><span class="material-symbols-outlined">lock</span>Private · only you</span></td><td class="subtle">May 2, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/linkedin.svg" alt=""></span></span><a href="social-account-detail.html">Alex T</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Growth Team</span></td><td class="subtle">Jan 13, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/facebook.svg" alt=""></span></span><a href="social-account-detail.html">AlexT FB Native Sched Page</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Growth Team</span></td><td class="subtle">Jan 13, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/facebook.svg" alt=""></span></span><a href="social-account-detail.html">AlexT Hoot Shop</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Content Team</span></td><td class="subtle">Jan 13, 2026</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">tag</span></span></span><a href="social-account-detail.html">annie hoot</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Publisher Team</span></td><td class="subtle">Apr 6, 2021</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span><a href="social-account-detail.html">anniew0436</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Publisher Team</span></td><td class="subtle">Apr 8, 2021</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/linkedin.svg" alt=""></span></span><a href="social-account-detail.html">Another Owl Mail</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Content Team</span></td><td class="subtle">Mar 24, 2023</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span><a href="social-account-detail.html">anotherowlmail</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Content Team</span></td><td class="subtle">Mar 6, 2023</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/facebook.svg" alt=""></span></span><a href="social-account-detail.html">Bonsai trees are us</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Field Team A</span></td><td class="subtle">Nov 7, 2019</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">tag</span></span></span><a href="social-account-detail.html">Northwind Social</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Growth Team</span></td><td class="subtle">Feb 4, 2021</td><td><span class="hs-badge hs-badge--negative">Disconnected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr data-owner="team"><td><div class="sa-cell"><span class="sa-av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/linkedin.svg" alt=""></span></span><a href="social-account-detail.html">DevtestCo 1236</a></div></td><td><span class="team-cell"><span class="material-symbols-outlined">groups</span>Publisher Team</span></td><td class="subtle">Oct 1, 2025</td><td><span class="hs-badge hs-badge--positive">Connected</span></td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr id="noMatch" style="display:none"><td colspan="5">No accounts match this view.</td></tr>
         </tbody>
       </table>
-      <p style="margin:14px 4px 0; font:var(--hs-type-body-sm); color:var(--bento-theme-color-text-subtle)">Showing 9 of 61 social accounts (sample data for this prototype).</p>
+      <p style="margin:14px 4px 0; font:var(--hs-type-body-sm); color:var(--bento-theme-color-text-subtle)">Showing a sample of the 61 social accounts (prototype data). Private accounts are visible only to you.</p>
     </div>
   </main>
 </div>
+<script>
+(function(){
+  // Destination tabs (All / Team / Private) + search, composed. Primary lens per Hill's review.
+  var rows = [].slice.call(document.querySelectorAll('table tbody tr[data-owner]'));
+  var tabs = document.getElementById('destTabs');
+  var search = document.querySelector('.searchbar input');
+  var noMatch = document.getElementById('noMatch');
+  var owner = 'all', term = '';
+  try { var q = new URLSearchParams(location.search).get('owner'); if (q === 'team' || q === 'private') owner = q; } catch(e){}
+  function nm(r){ var a = r.querySelector('.sa-cell a'); return (a ? a.textContent : '').toLowerCase(); }
+  function apply(){
+    var shown = 0;
+    rows.forEach(function(r){
+      var ok = (owner === 'all' || r.getAttribute('data-owner') === owner) && (term === '' || nm(r).indexOf(term) !== -1);
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    if (noMatch) noMatch.style.display = shown ? 'none' : '';
+  }
+  tabs.addEventListener('click', function(e){
+    var t = e.target.closest('.hs-tab'); if(!t) return;
+    tabs.querySelectorAll('.hs-tab').forEach(function(x){ x.classList.remove('is-active'); x.removeAttribute('aria-current'); });
+    t.classList.add('is-active'); t.setAttribute('aria-current','page');
+    owner = t.getAttribute('data-owner'); apply();
+  });
+  tabs.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ var t = e.target.closest('.hs-tab'); if(t){ e.preventDefault(); t.click(); } } });
+  if (search) search.addEventListener('input', function(){ term = this.value.toLowerCase().trim(); apply(); });
+  // sync active tab to owner (supports ?owner=team|private deep-links)
+  tabs.querySelectorAll('.hs-tab').forEach(function(x){ var on = x.getAttribute('data-owner') === owner; x.classList.toggle('is-active', on); if (on) x.setAttribute('aria-current','page'); else x.removeAttribute('aria-current'); });
+  apply();
+})();
+</script>
 <script src="banner.js"></script>
 <script src="nav.js"></script>
 <script src="profile-menu.js"></script>
-<script src="table-search.js"></script>
 <script src="a11y.js"></script>
 </body></html>
