@@ -108,7 +108,7 @@
     <div class="page-top">
       <a class="back ne-tooltipbtn" href="overview.html" aria-label="Back to overview"><span class="material-symbols-outlined">chevron_left</span></a>
       <h1>All social accounts</h1>
-      <button class="hs-btn hs-btn--primary" disabled>Add social account</button>
+      <button class="hs-btn hs-btn--primary" id="addCta" disabled>Add social account</button>
     </div>
 
     <div class="list-panel">
@@ -161,9 +161,18 @@
   var tabs = document.getElementById('destTabs');
   var search = document.querySelector('.searchbar input');
   var noMatch = document.getElementById('noMatch');
+  var addCta = document.getElementById('addCta');
   var owner = 'all', term = '';
   try { var q = new URLSearchParams(location.search).get('owner'); if (q === 'team' || q === 'private') owner = q; } catch(e){}
   function nm(r){ var a = r.querySelector('.sa-cell a'); return (a ? a.textContent : '').toLowerCase(); }
+  // Context-aware CTA: on the Private tab any member can add their own private account (enabled);
+  // on All/Team it stays the admin-gated org "Add social account" (disabled), matching staging.
+  function syncCta(){
+    if (!addCta) return;
+    if (owner === 'private') { addCta.textContent = 'Add private account'; addCta.disabled = false; }
+    else { addCta.textContent = 'Add social account'; addCta.disabled = true; }
+  }
+  if (addCta) addCta.addEventListener('click', function(){ if (owner === 'private') location.href = 'add-private-account.html'; });
   function apply(){
     var shown = 0;
     rows.forEach(function(r){
@@ -171,7 +180,16 @@
       r.style.display = ok ? '' : 'none';
       if (ok) shown++;
     });
-    if (noMatch) noMatch.style.display = shown ? 'none' : '';
+    if (noMatch) {
+      noMatch.style.display = shown ? 'none' : '';
+      var td = noMatch.querySelector('td');
+      if (shown === 0 && td) {
+        if (owner === 'private' && term === '') {
+          td.innerHTML = 'You have not added any private accounts yet.<br><button class="hs-btn hs-btn--primary" style="margin-top:12px" onclick="location.href=\'add-private-account.html\'">Add private account</button>';
+        } else { td.textContent = 'No accounts match this view.'; }
+      }
+    }
+    syncCta();
   }
   tabs.addEventListener('click', function(e){
     var t = e.target.closest('.hs-tab'); if(!t) return;
