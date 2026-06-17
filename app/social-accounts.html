@@ -1,0 +1,546 @@
+<!doctype html>
+<!-- Suite Settings · Social accounts — interactive flow hub (ID-5792 private-accounts solution) -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin settings · Social accounts</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../components/fig-tokens.css">
+<link rel="stylesheet" href="../templates/src/suite-shell.css">
+<link rel="stylesheet" href="../templates/src/suite-drawer.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; background: var(--bento-theme-color-bg-app); color: var(--bento-theme-color-text-base); }
+  body { font: var(--hs-type-body-md); -webkit-font-smoothing: antialiased; }
+  .suite-main { background: var(--bento-theme-color-bg-surface-recessed) !important; overflow-y: auto; }
+  body { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  .suite-app { height:auto; flex:1 1 auto; min-height:0; }
+  .banner.warning.topbanner { flex:0 0 auto; }
+  .hs-tabs .hs-tab { text-decoration: none !important; }
+  .hs-tabs .hs-tab.is-active::after { background: var(--bento-theme-color-text-base) !important; left:0 !important; right:0 !important; }
+  /* ID-5792 options B / C */
+  .bnotice { display:flex; gap:12px; align-items:flex-start; padding:16px; border:1px solid var(--bento-theme-color-border-subtle); border-radius:12px; background:var(--bento-component-alert-info-fill); margin-bottom:16px; }
+  .bnotice > .material-symbols-outlined { color:var(--bento-theme-color-icon-info); }
+  .bnotice .bx { flex:1; min-width:0; }
+  .bnotice .bt { font:var(--hs-type-body-md-b); }
+  .bnotice .bd { font:var(--hs-type-body-sm); color:var(--bento-theme-color-text-subtle); margin:2px 0 10px; }
+  .priv-head { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--bento-theme-color-border-subtle); }
+  .priv-head > .material-symbols-outlined { color:var(--bento-theme-color-icon-base); }
+  .priv-head .pt { font:var(--hs-type-body-md-b); flex:1; }
+  .priv-head .ps { display:block; font:var(--hs-type-body-sm); color:var(--bento-theme-color-text-subtle); font-weight:400; margin-top:2px; }
+
+  /* Banner (warning) — preview/alert-banner.html */
+  .banner { display: flex; gap: 16px; align-items: center; padding: var(--bento-component-alert-banner-padding-y) var(--bento-component-alert-banner-padding-x); }
+  .banner.warning { background: var(--bento-component-alert-warning-fill); }
+  .banner.info { background: var(--bento-component-alert-info-fill); }
+  .banner .ic { font-size: 24px; flex-shrink: 0; }
+  .banner.warning .ic { color: var(--bento-system-sys-warning-700); }
+  .banner.info .ic { color: var(--bento-theme-color-icon-info); font-variation-settings: 'FILL' 1; }
+  .banner .body { flex: 1; min-width: 0; }
+  .banner .title { font: var(--hs-type-body-md-b); font-weight:700; color:var(--hs-ref-grey-dark-241f21); }
+  .ban-link { color: var(--hs-ref-secondary-2f6b9a); font-weight:400; text-decoration:none; }
+  .ban-link:hover { text-decoration:underline; }
+  .banner .desc { font: var(--hs-type-body-md); }
+  .banner .actions { display: flex; align-items: center; gap: 4px; }
+
+  /* ToggleGroup (comp-toggle-group, figma 59111-76930) — single-select segmented control; selected = check + 2px border. Keyed on .active so the existing filter JS drives it. */
+  .tg { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--bento-space-02); }
+  .tg .ti { appearance: none; border: 0; background: transparent; color: var(--bento-theme-color-text-base); border-radius: var(--bento-component-toggle-group-radius); min-height: var(--bento-component-toggle-group-min-touch); padding: var(--bento-component-toggle-group-padding-y) var(--bento-component-toggle-group-padding-x-text); display: inline-flex; align-items: center; gap: var(--bento-component-toggle-group-gap-inline); font: var(--hs-type-body-md-b); cursor: pointer; }
+  .tg .ti:hover:not(.active) { background: var(--bento-component-toggle-group-fill-hovered); }
+  .tg .ti:active { background: var(--bento-component-toggle-group-fill-pressed); }
+  .tg .ti.active { background: var(--bento-component-toggle-group-selected-fill); box-shadow: inset 0 0 0 var(--bento-component-toggle-group-border-width-selected) var(--bento-theme-color-border-selected); }
+  .tg .ti .lead, .tg .ti .check { font-size: var(--bento-theme-icon-md); }
+  .tg .ti .check { display: none; }
+  .tg .ti.active .check { display: inline-flex; }
+
+  /* Accordion network group — preview/accordion.html */
+  .acc-list { border: 1px solid var(--bento-theme-color-border-subtle); border-radius: 8px; overflow: visible; background: var(--bento-theme-color-bg-surface); margin-bottom: 16px; }
+  .acc-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; }
+  .acc-head:hover { background: var(--bento-component-accordion-fill-hovered); }
+  .acc-head .net { width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; background: var(--bento-system-sys-neutral-alt-100); }
+  .acc-head .net .material-symbols-outlined { font-size: 18px; color: var(--bento-theme-color-icon-base); }
+  .acc-head .acc-chev { color: var(--bento-theme-color-icon-base); }
+  .net-group.collapsed > .sa-row { display: none !important; }
+  .acc-title { font: var(--hs-type-body-md-b); flex: 1; }
+  .acc-count { font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); }
+
+  .sa-row { position: relative; display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 14px; padding: 14px 16px; border-top: 1px solid var(--bento-theme-color-border-subtle); }
+  .sa-row .av { width: 40px; height: 40px; border-radius: 999px; background: var(--bento-system-sys-neutral-alt-300); display: grid; place-items: center; color: var(--bento-theme-color-icon-base); position: relative; }
+  .sa-row .av > .material-symbols-outlined { font-size: 24px; font-variation-settings: 'FILL' 1; }
+  .sa-row .av .netbadge { position: absolute; right: -2px; bottom: -2px; width: 18px; height: 18px; border-radius: 999px; background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); display: grid; place-items: center; }
+  .sa-row .av .netbadge img { width: 11px; height: 11px; display: block; }
+  .sa-row .av .netbadge .material-symbols-outlined { font-size: 11px; color: var(--bento-theme-color-icon-base); }
+  .sa-name { font: var(--hs-type-body-md-b); }
+  .sa-sub { font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); }
+  .sa-status { display: inline-flex; align-items: center; gap: 8px; }
+  .sa-badges { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+
+  /* per-row menu */
+  .rowmenu { position: absolute; right: 12px; top: 52px; z-index: 30; min-width: 180px; background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); border-radius: 8px; box-shadow: var(--bento-theme-elevation-shadow-overlay-bottom); padding: 4px; display: none; }
+  .rowmenu.open { display: block; }
+  .rowmenu button { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: transparent; cursor: pointer; padding: 10px 12px; border-radius: 6px; font: var(--hs-type-body-md); color: var(--bento-theme-color-text-base); text-align: left; }
+  .rowmenu button:hover { background: var(--bento-component-list-item-fill-hovered); }
+  .rowmenu .material-symbols-outlined { font-size: 18px; color: var(--bento-theme-color-icon-base); }
+
+  /* Page */
+  .pg { padding: 28px 32px 80px; max-width: 1160px; }
+  .page-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .page-head h1 { font: var(--hs-type-title-section); margin: 0; flex: 1; }
+  .page-head p { font: var(--hs-type-body-md); color: var(--bento-theme-color-text-subtle); margin: 4px 0 0; }
+  .page-head .actions { display: flex; gap: 8px; }
+  .toolbar { display: flex; align-items: center; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+  .toolbar .ownlbl { font: var(--hs-type-meta-b); color: var(--bento-theme-color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+  .search { flex: 1; min-width: 240px; height: 40px; padding: 0 12px; border: 1px solid var(--bento-theme-color-border-base); border-radius: 8px; background: var(--bento-theme-color-bg-surface); font: var(--hs-type-body-md); }
+  .org-switch { display: flex; align-items: center; gap: 8px; height: 40px; margin: 4px 0 8px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--bento-theme-color-border-base); background: var(--bento-theme-color-bg-surface); cursor: pointer; width: 100%; box-sizing: border-box; }
+  .org-switch .nm { font: var(--hs-type-body-md-b); flex: 1; text-align: left; }
+  .caption { display:none; margin-top: 24px; font: var(--hs-type-meta); color: var(--hs-fg-secondary); font-family: ui-monospace, monospace; }
+
+  /* Modal — preview/modal.html */
+  .scrim { position: fixed; inset: 0; background: var(--bento-theme-color-overlay-scrim); display: none; place-items: center; padding: 24px; box-sizing: border-box; z-index: 100; }
+  .scrim.open { display: grid; }
+  .modal { width: 448px; max-width: 92%; background: var(--bento-theme-color-bg-surface); border-radius: var(--bento-theme-border-radii-03); box-shadow: var(--bento-theme-elevation-shadow-overlay-bottom); }
+  .modal.sm { width: 408px; }
+  .modal-head { display: flex; align-items: center; gap: 12px; padding: 16px 40px; border-bottom: 1px solid var(--bento-theme-color-border-subtle); }
+  .modal-head .ttl { font: var(--hs-type-title-base); flex: 1; }
+  .modal-body { padding: 16px 40px 20px; font: var(--hs-type-body-md); }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 16px 40px 32px; }
+  .lb { display: flex; flex-direction: column; padding: 4px; background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); border-radius: 8px; }
+  .li { display: flex; align-items: center; gap: var(--bento-component-list-item-gap-inline); padding: var(--bento-component-list-item-padding-y) var(--bento-component-list-item-padding-x); border-radius: var(--bento-component-list-item-border-radius); cursor: pointer; }
+  .li:hover { background: var(--bento-component-list-item-fill-hovered); }
+  .li.selected { background: var(--bento-component-list-item-fill-selected); }
+  .li .ic { font-size: 24px; color: var(--bento-theme-color-icon-base); }
+  .li .t { font: var(--hs-type-body-md-b); flex: 1; }
+  .explainer { display: flex; gap: 10px; padding: 12px; margin-bottom: 16px; border-radius: 8px; background: var(--bento-component-alert-info-fill); }
+  .explainer .material-symbols-outlined { font-size: 20px; color: var(--bento-theme-color-icon-info); flex-shrink: 0; }
+  .explainer .x { font: var(--hs-type-body-sm); }
+  .acct { display: flex; align-items: center; gap: 10px; margin: 14px 0; padding: 10px 12px; border-radius: 8px; background: var(--bento-system-sys-neutral-alt-100); }
+  .acct .av { width: 32px; height: 32px; border-radius: 999px; display: grid; place-items: center; font: var(--hs-type-meta-b); background: var(--hs-cat-8-bg); color: var(--hs-cat-8-fg); }
+  .assumption { margin-top: 14px; font: var(--hs-type-meta); color: var(--bento-theme-color-text-subtle); font-family: ui-monospace, monospace; }
+
+  /* Toast — success */
+  #toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); z-index: 200; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); box-shadow: var(--bento-theme-elevation-shadow-overlay-bottom); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast .material-symbols-outlined { color: var(--bento-system-sys-positive-600); }
+  .hs-badge--negative { color: var(--bento-system-sys-negative-600); } /* disconnected badge: heavier negative-600 to match staging */
+
+  /* Empty state (suite-shell.css .suite-state) hosted in a panel */
+  #emptyState { display: none; }
+  #emptyState .suite-state { min-height: 260px; background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); border-radius: 12px; }
+</style>
+</head>
+<body>
+<div class="banner warning topbanner" role="status">
+  <span class="material-symbols-outlined ic">warning</span>
+  <div class="body"><div class="title">Reconnection Required</div><div class="desc">Some of your accounts are no longer publishing or collecting data, or may stop in the near future. <a class="ban-link" href="#">Click to reconnect your social accounts</a></div></div>
+  <div class="actions">
+    <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="Dismiss" style="width:32px;height:32px" onclick="this.closest('.banner').remove()"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+  </div>
+</div>
+<div class="suite-app">
+  <aside class="suite-rail" aria-label="Hootsuite products">
+    <div class="main">
+      <a class="suite-brand" href="overview.html" aria-label="Home"><img src="../assets/hootsuite-owly-small.png" alt=""><span class="lbl">Home</span></a>
+      <a class="suite-navbtn" data-product="perch" href="#"><span class="circle"><span class="material-symbols-outlined">calendar_month</span></span><span class="lbl">Perch</span></a>
+      <a class="suite-navbtn" data-product="nest" href="#"><span class="circle"><span class="material-symbols-outlined">inbox</span></span><span class="lbl">Nest</span></a>
+      <a class="suite-navbtn" data-product="lumen" href="#"><span class="circle"><span class="material-symbols-outlined">graphic_eq</span></span><span class="lbl">Lumen</span></a>
+      <a class="suite-navbtn" data-product="parliament" href="#"><span class="circle"><span class="material-symbols-outlined">groups</span></span><span class="lbl">Parliament</span></a>
+      <a class="suite-navbtn" data-product="wisdom" href="#"><span class="circle"><span class="material-symbols-outlined">auto_awesome</span></span><span class="lbl">Wisdom</span></a>
+    </div>
+    <div class="others">
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Analytics"><span class="circle"><span class="material-symbols-outlined">bar_chart</span></span></button>
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Notifications"><span class="circle"><span class="material-symbols-outlined">notifications_none</span></span></button>
+      <span class="avatar" aria-hidden="true">HR</span>
+    </div>
+  </aside>
+
+  <aside class="suite-drawer" aria-label="Admin settings navigation">
+    <div class="sd-head">Admin settings
+      <button class="sd-collapse ne-tooltipbtn" aria-label="Collapse navigation"><span class="material-symbols-outlined">keyboard_double_arrow_left</span></button>
+    </div>
+    <div class="sd-body">
+      <button class="org-switch" aria-haspopup="listbox" aria-label="Switch organization, current: Publisher Organization">
+        <span class="hs-avatar" style="width:32px;height:32px;background:var(--hs-cat-5-bg);color:var(--hs-cat-5-fg);font:var(--hs-type-meta-b)"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <span class="nm">Publisher Organization</span>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <div class="sd-group">Organization</div>
+      <a class="sd-item" href="overview.html">Overview</a>
+      <a class="sd-item" href="teams.html">Teams</a>
+      <a class="sd-item" href="members.html">Members</a>
+      <a class="sd-item on" href="social-accounts.html" aria-current="page">Social accounts</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Settings</a>
+      <div class="sd-group">Publishing</div>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Tags</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Campaigns</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Link settings</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Suspended posts</a>
+    </div>
+  </aside>
+
+  <main class="suite-main">
+    <div class="banner info" role="status">
+      <span class="material-symbols-outlined ic">info</span>
+      <div class="body"><div class="desc">This is the beta social accounts and teams. <a href="#" style="color:var(--bento-theme-color-text-base);font:var(--hs-type-body-md-b);text-decoration:underline">Click here for the previous version</a></div></div>
+    </div>
+    <div class="pg">
+      <div class="page-head">
+        <div style="flex:1; min-width:0"><h1>Social accounts</h1><p>Connect, reconnect, and manage team and private accounts.</p></div>
+        <div class="actions">
+          <button class="hs-btn hs-btn--outlined" data-open="addModal" data-opt="C"><span class="material-symbols-outlined">lock</span>Add private account</button>
+          <button class="hs-btn hs-btn--primary" data-open="addModal" data-mode="team"><span class="material-symbols-outlined">add</span>Add social account</button>
+        </div>
+      </div>
+
+      <div class="bnotice" data-opt="B">
+        <span class="material-symbols-outlined">person</span>
+        <div class="bx">
+          <div class="bt">Your private accounts live in your personal space</div>
+          <div class="bd">Private accounts are owned by you, not the organization, so they're managed in My social accounts. This list shows team and organization accounts only.</div>
+          <a class="hs-btn hs-btn--outlined hs-btn--sm" href="my-social-accounts.html"><span class="material-symbols-outlined">open_in_new</span>Open My social accounts</a>
+        </div>
+      </div>
+      <nav class="hs-tabs" aria-label="Connection status" id="statusTabs">
+        <a class="hs-tab is-active" data-status="connected" role="button" tabindex="0" aria-current="page">Connected (25)</a>
+        <a class="hs-tab" data-status="disconnected" role="button" tabindex="0">Disconnected (36)</a>
+      </nav>
+
+      <!-- LENS 3 (destination): the All/Team/Private secondary filter. Primary tabs above = Lens 1 (connection status); network groups below = Lens 2 (network). DEV-EFFORT FLAG: this filter is the one net-new piece (no filter exists in T&O today) — validate cost with engineering before committing. LENS-PRIMACY ASSUMPTION (from Hill review, NOT research-backed, change here if research says otherwise): status = primary, network = secondary, destination = tertiary filter. Shown in Option C (amalgamation). -->
+      <div class="toolbar" data-opt="C">
+        <span class="ownlbl">Show</span>
+        <div class="tg" role="radiogroup" aria-label="Filter by ownership" id="ownFilter">
+          <button class="ti opt active" role="radio" aria-checked="true" data-owner="all"><span class="material-symbols-outlined check">check</span>All</button>
+          <button class="ti opt" role="radio" aria-checked="false" data-owner="team"><span class="material-symbols-outlined check">check</span><span class="material-symbols-outlined lead">groups</span>Team</button>
+          <button class="ti opt" role="radio" aria-checked="false" data-owner="private"><span class="material-symbols-outlined check">check</span><span class="material-symbols-outlined lead">lock</span>Private</button>
+        </div>
+        <input class="search" type="search" placeholder="Search accounts…" aria-label="Search accounts">
+      </div>
+
+      <div id="accountList">
+        <!-- Bluesky group -->
+        <div class="acc-list net-group" data-net="Bluesky">
+          <div class="acc-head" role="button" tabindex="0" aria-expanded="true"><span class="net"><span class="material-symbols-outlined">cloud</span></span><span class="acc-title">Bluesky</span><span class="acc-count"></span><span class="material-symbols-outlined acc-chev">keyboard_arrow_up</span></div>
+          <div class="sa-row" data-owner="team" data-status="connected" data-name="@publisher.bsky.social">
+            <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+            <div class="sa-info"><div class="sa-name">@publisher.bsky.social</div><div class="sa-sub">Bluesky</div><div class="sa-badges"><span class="hs-badge hs-badge--neutral"><span class="material-symbols-outlined">groups</span>Publisher Team</span><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+            <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="sa-row" data-owner="private" data-status="disconnected" data-name="@robin.bsky.social" data-opt="C">
+            <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+            <div class="sa-info"><div class="sa-name">@robin.bsky.social</div><div class="sa-sub">Bluesky · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="hs-badge hs-badge--negative">Disconnected</span><button class="hs-btn hs-btn--ghost hs-btn--sm" data-act="reconnect">Reconnect</button></div></div>
+            <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="sa-row" data-owner="private" data-status="connected" data-name="@robin-personal.bsky.social" data-opt="C">
+            <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+            <div class="sa-info"><div class="sa-name">@robin-personal.bsky.social</div><div class="sa-sub">Bluesky · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+            <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+        </div>
+        <!-- Instagram group -->
+        <div class="acc-list net-group" data-net="Instagram">
+          <div class="acc-head" role="button" tabindex="0" aria-expanded="true"><span class="net"><span class="material-symbols-outlined">photo_camera</span></span><span class="acc-title">Instagram</span><span class="acc-count"></span><span class="material-symbols-outlined acc-chev">keyboard_arrow_up</span></div>
+          <div class="sa-row" data-owner="team" data-status="connected" data-name="@publisherteam">
+            <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span>
+            <div class="sa-info"><div class="sa-name">@publisherteam</div><div class="sa-sub">Instagram Business</div><div class="sa-badges"><span class="hs-badge hs-badge--neutral"><span class="material-symbols-outlined">groups</span>Publisher Team</span><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+            <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="sa-row" data-owner="private" data-status="connected" data-name="@robin.creates" data-opt="C">
+            <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span>
+            <div class="sa-info"><div class="sa-name">@robin.creates</div><div class="sa-sub">Instagram · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+            <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option C: dedicated Private accounts section (viewer-scoped) -->
+      <!-- Option A (dedicated section) for comparison only. Option C below is the recommended amalgamation. -->
+      <div class="acc-list" id="privSection" data-opt="A">
+        <div class="priv-head">
+          <span class="material-symbols-outlined">lock</span>
+          <div class="pt">Private accounts · only you<span class="ps">Visible only to you. Only you can publish to these. Not shared with any team or organization.</span></div>
+          <button class="hs-btn hs-btn--outlined hs-btn--sm" data-open="addModal"><span class="material-symbols-outlined">add</span>Add private account</button>
+        </div>
+        <div class="sa-row" data-status="disconnected" data-name="@robin.bsky.social">
+          <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+          <div class="sa-info"><div class="sa-name">@robin.bsky.social</div><div class="sa-sub">Bluesky · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--negative">Disconnected</span><button class="hs-btn hs-btn--ghost hs-btn--sm" data-act="reconnect">Reconnect</button></div></div>
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+        </div>
+        <div class="sa-row" data-status="connected" data-name="@robin-personal.bsky.social">
+          <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+          <div class="sa-info"><div class="sa-name">@robin-personal.bsky.social</div><div class="sa-sub">Bluesky · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+        </div>
+        <div class="sa-row" data-status="connected" data-name="@robin.creates">
+          <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span>
+          <div class="sa-info"><div class="sa-name">@robin.creates</div><div class="sa-sub">Instagram · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+        </div>
+      </div>
+
+      <!-- Empty state (shown by JS when a filter has no matches) -->
+      <div id="emptyState">
+        <div class="suite-state empty">
+          <div class="suite-state-inner">
+            <div class="ico"><span class="material-symbols-outlined">lock</span></div>
+            <h2 id="emptyTitle">No private accounts yet</h2>
+            <p id="emptyBody">Private accounts are visible only to you, and only you can publish to them. They aren't shared with any team or organization.</p>
+            <div class="acts"><button class="hs-btn hs-btn--primary" data-open="addModal"><span class="material-symbols-outlined">lock</span>Add private account</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="caption">flow · social-accounts · click Add private account / a row's ⋯ to walk add + remove · ASSUMES owner-only manage (pending Deep)</div>
+    </div>
+  </main>
+</div>
+
+<!-- Add private account modal -->
+<div class="scrim" id="addModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="apa-title">
+    <div class="modal-head"><div class="ttl" id="apa-title">Add a private account</div>
+      <button class="hs-btn hs-btn--ghost hs-btn--icon" aria-label="Close" data-close style="width:32px;height:32px"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="explainer"><span class="material-symbols-outlined" id="addExplainIcon">lock</span><div class="x" id="addExplainText">A private account is visible only to you, and only you can publish to it. It isn't shared with any team or organization.</div></div>
+      <div style="font: var(--hs-type-body-sm-b); margin-bottom:6px">Choose a network</div>
+      <div class="lb" role="listbox" aria-label="Network" id="netList">
+        <div class="li selected" role="option" aria-selected="true" data-net="Bluesky" data-icon="cloud"><span class="hs-radio is-on"></span><span class="material-symbols-outlined ic">cloud</span><div style="flex:1"><span class="t">Bluesky</span></div></div>
+        <div class="li" role="option" aria-selected="false" data-net="Instagram" data-icon="photo_camera"><span class="hs-radio"></span><span class="material-symbols-outlined ic">photo_camera</span><div style="flex:1"><span class="t">Instagram</span></div></div>
+        <div class="li" role="option" aria-selected="false" data-net="X" data-icon="tag"><span class="hs-radio"></span><span class="material-symbols-outlined ic">tag</span><div style="flex:1"><span class="t">X</span></div></div>
+        <div class="li" role="option" aria-selected="false" data-net="LinkedIn" data-icon="work"><span class="hs-radio"></span><span class="material-symbols-outlined ic">work</span><div style="flex:1"><span class="t">LinkedIn</span></div></div>
+      </div>
+      <div class="assumption">ASSUMPTION (pending Deep): same OAuth flow as a team account; owner-only; not assigned to any team.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="hs-btn hs-btn--ghost" data-close>Cancel</button>
+      <button class="hs-btn hs-btn--primary" id="connectBtn"><span class="material-symbols-outlined">link</span>Connect account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Remove account modal -->
+<div class="scrim" id="removeModal">
+  <div class="modal sm" role="dialog" aria-modal="true" aria-labelledby="rm-title">
+    <div class="modal-head"><div class="ttl" id="rm-title">Remove account?</div>
+      <button class="hs-btn hs-btn--ghost hs-btn--icon" aria-label="Close" data-close style="width:32px;height:32px"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0">This disconnects the account and removes it from your private accounts. It won't affect any team or organization, and you can reconnect it later.</p>
+      <div class="acct"><span class="av">HR</span><div style="flex:1"><div class="sa-name" id="removeName">@account</div><div class="sa-sub">Private account</div></div></div>
+      <div class="assumption">ASSUMPTION (pending Deep): only the owner can remove their own private account; reversible via reconnect.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="hs-btn hs-btn--ghost" data-close>Cancel</button>
+      <button class="hs-btn hs-btn--primary" id="confirmRemoveBtn">Remove account</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"><span class="material-symbols-outlined">check_circle</span><span id="toastMsg">Done</span></div>
+
+<script>
+(function(){
+  var activeStatus = 'connected', activeOwner = 'all', pendingRemoveRow = null, searchTerm = '', addMode = 'private';
+
+  function toast(msg){ var t=document.getElementById('toast'); document.getElementById('toastMsg').textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2200); }
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function setAddMode(mode){
+    addMode = mode;
+    var title=document.getElementById('apa-title'), ex=document.getElementById('addExplainText'), exIcon=document.getElementById('addExplainIcon');
+    if(mode==='team'){
+      if(title) title.textContent='Add a social account';
+      if(ex) ex.textContent='This account is shared with your team or organization. Anyone with access can publish to it.';
+      if(exIcon) exIcon.textContent='groups';
+    } else {
+      if(title) title.textContent='Add a private account';
+      if(ex) ex.textContent="A private account is visible only to you, and only you can publish to it. It isn't shared with any team or organization.";
+      if(exIcon) exIcon.textContent='lock';
+    }
+  }
+  function closeModals(){ document.querySelectorAll('.scrim.open').forEach(function(s){s.classList.remove('open');}); }
+  function reconnectRow(row){
+    if(!row) return;
+    row.dataset.status='connected';
+    var badges=row.querySelector('.sa-badges');
+    if(badges){
+      var neg=badges.querySelector('.hs-badge--negative'); if(neg) neg.remove();
+      var rcb=badges.querySelector('[data-act="reconnect"]'); if(rcb) rcb.remove();
+      if(!badges.querySelector('.hs-badge--positive')){ var c=document.createElement('span'); c.className='hs-badge hs-badge--positive'; c.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Connected'; badges.appendChild(c); }
+    }
+    toast('Account reconnected'); applyFilters();
+  }
+
+  function optOk(el){ var o=document.body.getAttribute('data-option')||'A'; var t=el.getAttribute('data-opt'); if(!t) return true; return t.split(/\s+/).indexOf(o)!==-1; }
+  function applyFilters(){
+    var visible = 0;
+    document.querySelectorAll('.net-group').forEach(function(group){
+      var gv = 0;
+      group.querySelectorAll('.sa-row').forEach(function(row){
+        var ok = optOk(row) && row.dataset.status===activeStatus && (activeOwner==='all' || row.dataset.owner===activeOwner) && (searchTerm==='' || (row.dataset.name||'').toLowerCase().indexOf(searchTerm)!==-1);
+        row.style.display = ok ? '' : 'none';
+        if(ok){ gv++; visible++; }
+      });
+      var count = group.querySelector('.acc-count');
+      if(count) count.textContent = gv + (gv===1?' account':' accounts');
+      group.style.display = gv ? '' : 'none';
+    });
+    var empty = document.getElementById('emptyState');
+    if(visible===0){
+      empty.style.display='';
+      if(activeOwner==='private'){
+        document.getElementById('emptyTitle').textContent = 'No private accounts here';
+        document.getElementById('emptyBody').textContent = 'You have no '+activeStatus+' private accounts. Private accounts are visible only to you and aren’t shared with any team.';
+      } else {
+        document.getElementById('emptyTitle').textContent = 'No '+activeStatus+' accounts';
+        document.getElementById('emptyBody').textContent = 'Nothing matches this filter right now.';
+      }
+    } else { empty.style.display='none'; }
+  }
+
+  // Tabs
+  document.getElementById('statusTabs').addEventListener('click', function(e){
+    var t = e.target.closest('.hs-tab'); if(!t) return;
+    document.querySelectorAll('#statusTabs .hs-tab').forEach(function(x){x.classList.remove('is-active'); x.removeAttribute('aria-current');});
+    t.classList.add('is-active'); t.setAttribute('aria-current','page');
+    activeStatus = t.dataset.status; applyFilters();
+  });
+  // Ownership filter
+  document.getElementById('ownFilter').addEventListener('click', function(e){
+    var o = e.target.closest('.opt'); if(!o) return;
+    document.querySelectorAll('#ownFilter .opt').forEach(function(x){x.classList.remove('active'); x.setAttribute('aria-checked','false');});
+    o.classList.add('active'); o.setAttribute('aria-checked','true');
+    activeOwner = o.dataset.owner; applyFilters();
+  });
+  var searchInput = document.querySelector('.search');
+  if(searchInput) searchInput.addEventListener('input', function(e){ searchTerm = e.target.value.toLowerCase().trim(); applyFilters(); });
+  // Network picker (single select)
+  document.getElementById('netList').addEventListener('click', function(e){
+    var li = e.target.closest('.li'); if(!li) return;
+    document.querySelectorAll('#netList .li').forEach(function(x){x.classList.remove('selected'); x.setAttribute('aria-selected','false'); x.querySelector('.hs-radio').classList.remove('is-on');});
+    li.classList.add('selected'); li.setAttribute('aria-selected','true'); li.querySelector('.hs-radio').classList.add('is-on');
+  });
+
+  // Open / close modals
+  document.body.addEventListener('click', function(e){
+    var opener = e.target.closest('[data-open]'); if(opener){ setAddMode(opener.dataset.mode||'private'); openModal(opener.dataset.open); return; }
+    if(e.target.closest('[data-close]')){ closeModals(); return; }
+    if(e.target.classList && e.target.classList.contains('scrim')){ closeModals(); return; }
+    var rc = e.target.closest('[data-act="reconnect"]');
+    if(rc && !rc.closest('.rowmenu') && rc.closest('.sa-row')){ reconnectRow(rc.closest('.sa-row')); return; }
+    // row more menu
+    var more = e.target.closest('.rowmore');
+    if(more){
+      var row = more.closest('.sa-row');
+      var existing = row.querySelector('.rowmenu');
+      document.querySelectorAll('.rowmenu.open').forEach(function(m){ if(m!==existing) m.classList.remove('open'); });
+      if(existing){ existing.classList.toggle('open'); return; }
+      var menu = document.createElement('div'); menu.className='rowmenu open';
+      var disconnected = row.dataset.status==='disconnected';
+      menu.innerHTML = (disconnected?'<button data-act="reconnect"><span class="material-symbols-outlined">link</span>Reconnect</button>':'') +
+                       '<button data-act="remove"><span class="material-symbols-outlined">delete</span>Remove account</button>';
+      row.appendChild(menu);
+      menu.addEventListener('click', function(ev){
+        var b = ev.target.closest('button'); if(!b) return;
+        menu.classList.remove('open');
+        if(b.dataset.act==='reconnect'){ reconnectRow(row); }
+        else { pendingRemoveRow = row; document.getElementById('removeName').textContent = row.dataset.name; openModal('removeModal'); }
+      });
+      return;
+    }
+    if(!e.target.closest('.rowmenu')) document.querySelectorAll('.rowmenu.open').forEach(function(m){m.classList.remove('open');});
+  });
+
+  // Connect (add) action
+  document.getElementById('connectBtn').addEventListener('click', function(){
+    var sel = document.querySelector('#netList .li.selected');
+    var net = sel.dataset.net, icon = sel.dataset.icon;
+    if(addMode==='team'){
+      var tgroup = document.querySelector('.net-group[data-net="'+net+'"]');
+      if(!tgroup){ tgroup=document.createElement('div'); tgroup.className='acc-list net-group'; tgroup.dataset.net=net; tgroup.innerHTML='<div class="acc-head" role="button" tabindex="0" aria-expanded="true"><span class="net"><span class="material-symbols-outlined">'+icon+'</span></span><span class="acc-title">'+net+'</span><span class="acc-count"></span><span class="material-symbols-outlined acc-chev">keyboard_arrow_up</span></div>'; document.getElementById('accountList').appendChild(tgroup); }
+      var th='@publisher-'+net.toLowerCase();
+      var trow=document.createElement('div'); trow.className='sa-row'; trow.dataset.owner='team'; trow.dataset.status='connected'; trow.dataset.name=th;
+      trow.innerHTML='<span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">'+icon+'</span></span></span>'+
+        '<div class="sa-info"><div class="sa-name">'+th+'</div><div class="sa-sub">'+net+'</div><div class="sa-badges"><span class="hs-badge hs-badge--neutral"><span class="material-symbols-outlined">groups</span>Publisher Team</span><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>'+
+        '<button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>';
+      tgroup.appendChild(trow); closeModals(); activeStatus='connected'; activeOwner='all';
+      document.querySelectorAll('#statusTabs .hs-tab').forEach(function(x){x.classList.toggle('is-active', x.dataset.status==='connected');});
+      document.querySelectorAll('#ownFilter .opt').forEach(function(x){var on=x.dataset.owner==='all'; x.classList.toggle('active',on); x.setAttribute('aria-checked',on?'true':'false');});
+      applyFilters(); toast('Social account connected'); return;
+    }
+    if((document.body.getAttribute('data-option')||'C')==='A'){
+      var hC = '@robin-new.'+net.toLowerCase();
+      var crow = document.createElement('div'); crow.className='sa-row'; crow.dataset.status='connected'; crow.dataset.name=hC;
+      crow.innerHTML = '<span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">'+icon+'</span></span></span>'+
+        '<div class="sa-info"><div class="sa-name"><a href="social-account-detail.html?owner=private" style="color:inherit;text-decoration:none">'+hC+'</a></div><div class="sa-sub">'+net+' · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>'+
+        '<button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>';
+      document.getElementById('privSection').appendChild(crow); closeModals(); toast('Private account connected'); return;
+    }
+    var group = document.querySelector('.net-group[data-net="'+net+'"]');
+    if(!group){
+      group = document.createElement('div'); group.className='acc-list net-group'; group.dataset.net=net;
+      group.innerHTML = '<div class="acc-head" role="button" tabindex="0" aria-expanded="true"><span class="net"><span class="material-symbols-outlined">'+icon+'</span></span><span class="acc-title">'+net+'</span><span class="acc-count"></span><span class="material-symbols-outlined acc-chev">keyboard_arrow_up</span></div>';
+      document.getElementById('accountList').appendChild(group);
+    }
+    var handle = '@robin-new.'+net.toLowerCase();
+    var row = document.createElement('div');
+    row.className='sa-row'; row.dataset.owner='private'; row.dataset.status='connected'; row.dataset.name=handle;
+    row.innerHTML = '<span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">'+icon+'</span></span></span>'+
+      '<div class="sa-info"><div class="sa-name"><a href="social-account-detail.html?owner=private" style="color:inherit;text-decoration:none">'+handle+'</a></div><div class="sa-sub">'+net+' · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>'+
+      '<button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>';
+    group.appendChild(row);
+    closeModals();
+    activeStatus='connected'; activeOwner='private';
+    document.querySelectorAll('#statusTabs .hs-tab').forEach(function(x){x.classList.toggle('is-active', x.dataset.status==='connected');});
+    document.querySelectorAll('#ownFilter .opt').forEach(function(x){var on=x.dataset.owner==='private'; x.classList.toggle('active',on); x.setAttribute('aria-checked', on?'true':'false');});
+    applyFilters();
+    toast('Private account connected');
+  });
+
+  // Confirm remove
+  document.getElementById('confirmRemoveBtn').addEventListener('click', function(){
+    if(pendingRemoveRow){ pendingRemoveRow.remove(); pendingRemoveRow=null; }
+    closeModals(); applyFilters(); toast('Account removed');
+  });
+
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModals(); });
+
+  document.addEventListener('optionchange', function(e){
+    if(e.detail && e.detail.option!=='C'){ activeOwner='all';
+      document.querySelectorAll('#ownFilter .opt').forEach(function(x){var on=x.dataset.owner==='all'; x.classList.toggle('active',on); x.setAttribute('aria-checked',on?'true':'false');});
+    }
+    applyFilters();
+  });
+
+  applyFilters();
+})();
+</script>
+<script>
+(function(){
+  function toggleHead(head){
+    var grp = head.closest('.net-group'); if (!grp) return;
+    var open = head.getAttribute('aria-expanded') !== 'false';
+    head.setAttribute('aria-expanded', String(!open));
+    grp.classList.toggle('collapsed', open);
+    var chev = head.querySelector('.acc-chev'); if (chev) chev.textContent = open ? 'keyboard_arrow_down' : 'keyboard_arrow_up';
+  }
+  document.addEventListener('click', function(e){ var h = e.target.closest('.acc-head'); if (h) toggleHead(h); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { var h = e.target.closest && e.target.closest('.acc-head'); if (h) { e.preventDefault(); toggleHead(h); } } });
+})();
+</script>
+<script>
+(function(){
+  [].forEach.call(document.querySelectorAll('#privSection .sa-name, .net-group .sa-row[data-owner="private"] .sa-name'), function(nm){
+    if (nm.querySelector('a')) return;
+    var a = document.createElement('a');
+    a.href = 'social-account-detail.html?owner=private';
+    a.style.color = 'inherit'; a.style.textDecoration = 'none';
+    a.textContent = nm.textContent; nm.textContent = ''; nm.appendChild(a);
+  });
+})();
+</script>
+<script src="option-switcher.js"></script>
+<script src="nav.js"></script>
+<script src="tabs.js"></script>
+<script src="profile-menu.js"></script>
+<script src="a11y.js"></script>
+</body></html>

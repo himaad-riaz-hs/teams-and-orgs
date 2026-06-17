@@ -1,0 +1,484 @@
+<!doctype html>
+<!-- Suite Settings · Admin settings → Organization Overview (matches staging screenshots) -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin settings · Overview</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../components/fig-tokens.css">
+<link rel="stylesheet" href="../templates/src/suite-shell.css">
+<link rel="stylesheet" href="../templates/src/suite-drawer.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; background: var(--bento-theme-color-bg-app); color: var(--bento-theme-color-text-base); }
+  body { font: var(--hs-type-body-md); -webkit-font-smoothing: antialiased; }
+
+  /* Banner (warning) — from preview/alert-banner.html */
+  .banner { display: flex; gap: 16px; align-items: center; padding: var(--bento-component-alert-banner-padding-y) var(--bento-component-alert-banner-padding-x); }
+  .banner.warning { background: var(--bento-component-alert-warning-fill); }
+  .banner.info { background: var(--bento-component-alert-info-fill); }
+  .banner .ic { font-size: 24px; flex-shrink: 0; }
+  .banner.warning .ic { color: var(--bento-system-sys-warning-700); }
+  .banner.info .ic { color: var(--bento-theme-color-icon-info); }
+  .banner .body { flex: 1; min-width: 0; }
+  .banner .title { font: var(--hs-type-body-md-b); font-weight:700; line-height: var(--bento-theme-line-heights-1); color:var(--hs-ref-grey-dark-241f21); }
+  .banner.info .ic { font-variation-settings: 'FILL' 1; }
+  .ban-link { color: var(--hs-ref-secondary-2f6b9a); font-weight:400; text-decoration:none; }
+  .ban-link:hover { text-decoration:underline; }
+  .banner .desc { font: var(--hs-type-body-md); }
+  .hs-badge--negative { color: var(--bento-system-sys-negative-600); } /* disconnected badge: heavier negative-600 to match staging */
+  .banner .actions { display: flex; align-items: center; gap: 4px; }
+
+  /* DisplayToggle / line tabs reuse hs-tabs (global) */
+  .org-switch { display:flex; align-items:center; gap:8px; height:40px; margin:4px 0 8px; padding:0 10px; border-radius:8px;
+    border:0; background:transparent; cursor:pointer; width:100%; box-sizing:border-box; }
+  .org-switch .nm { font: var(--hs-type-body-md-b); flex:1; text-align:left; }
+
+  .pg { padding: 40px 32px 80px; max-width: none; }
+  .org-head { display:flex; align-items:center; gap:16px; margin-bottom: 0; }
+  .org-band { background: var(--bento-theme-color-bg-surface); border-bottom: 1px solid var(--bento-theme-color-border-subtle); padding: 18px 32px; }
+  .suite-main { background: var(--bento-theme-color-bg-surface-recessed) !important; overflow-y: auto; }
+  .suite-app > .rightcol { display:flex; flex-direction:column; flex:1; min-width:0; }
+  .rightcol > .lowerrow { display:flex; flex-direction:row; flex:1; min-height:0; }
+  .rightcol > .lowerrow > .suite-main { flex:1; min-width:0; }
+  .suite-drawer { transition: width .15s ease; }
+  .suite-drawer.collapsed { width:56px; }
+  .suite-drawer.collapsed .sd-body { display:none; }
+  .suite-drawer.collapsed .sd-head { justify-content:center; padding:0; font-size:0; }
+  .gv-link { display:block; padding:10px 2px 2px; }
+  .li-row .av img { display:block; }
+  .li-row .av.netav { background:var(--bento-system-sys-neutral-alt-300); position:relative; }
+  .li-row .av .ps { font-size:22px; font-variation-settings:'FILL' 1; color:var(--bento-theme-color-icon-base); }
+  .li-row .av .nb { position:absolute; right:-2px; bottom:-2px; width:16px; height:16px; border-radius:999px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); display:grid; place-items:center; }
+  .li-row .av .nb img { width:10px; height:10px; display:block; }
+  .org-head .org-av { width:60px; height:60px; border-radius:999px; display:grid; place-items:center; font:var(--hs-type-title-sub); background:var(--bento-system-sys-neutral-alt-300); color:var(--bento-theme-color-text-subtle); }
+  .org-head h1 { font: var(--hs-type-title-section); font-size:30px; line-height:40px; margin:0; }
+  .org-head .meta { font: var(--hs-type-body-md); color: var(--bento-theme-color-text-base); margin-top:2px; }
+  .hdr-search { display:flex; align-items:center; gap:8px; height:48px; box-sizing:border-box; flex:0 1 300px; padding:0 12px; border:1px solid var(--bento-theme-color-border-base); border-radius:8px; background:var(--bento-theme-color-bg-surface); }
+  .hdr-search .material-symbols-outlined { color:var(--bento-theme-color-icon-subtle); font-size:20px; }
+  .hdr-search input { border:0; outline:0; background:transparent; flex:1; min-width:0; font:var(--hs-type-body-md); color:var(--bento-theme-color-text-base); }
+
+  .sec { margin-bottom: 28px; }
+  .sec-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .sec-head h2 { font: var(--hs-type-title-sub); font-size:26px; line-height:32px; font-weight:600; color:var(--hs-ref-grey-dark-241f21); margin:0; }
+  .sec-head .sub { font: var(--hs-type-body-md); color: var(--hs-ref-grey-dark-241f21); }
+
+  .team-row { display:flex; gap:16px; overflow-x:auto; padding-bottom:4px; }
+  .teams-panel { background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:12px; padding:24px; }
+  .team-card { flex:0 0 232px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:12px; padding:16px; }
+  .team-card .tc-av { width:40px; height:40px; border-radius:999px; display:grid; place-items:center; font:var(--hs-type-meta-b); background:var(--bento-system-sys-neutral-alt-100); color:var(--bento-theme-color-text-subtle); margin-bottom:10px; }
+  .team-card .tc-name { font: var(--hs-type-body-md-b); }
+  .team-card .tc-meta { font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); margin-top:2px; }
+  .team-card .tc-admins { font: var(--hs-type-body-sm-b); color: var(--bento-theme-color-text-base); margin:14px 0 8px; }
+  .stack { display:flex; }
+  .stack .pav { width:40px; height:40px; border-radius:999px; background:var(--bento-system-sys-neutral-alt-300); display:grid; place-items:center; border:2px solid var(--bento-theme-color-bg-surface); margin-left:-10px; color:var(--bento-theme-color-icon-base); }
+  .stack .pav:first-child { margin-left:0; }
+  .stack .pav .material-symbols-outlined { font-size:24px; font-variation-settings:'FILL' 1; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .panel { background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:12px; padding:20px; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .panel-head h3 { font: var(--hs-type-title-sub); font-size:26px; line-height:32px; font-weight:600; color:var(--hs-ref-grey-dark-241f21); margin:0; }
+  .li-row { display:flex; align-items:center; gap:12px; padding:14px 16px; border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; margin-bottom:8px; }
+  .li-row .av { width:36px; height:36px; border-radius:999px; display:grid; place-items:center; font:var(--hs-type-meta-b); flex-shrink:0; }
+  .li-row .nm { font: var(--hs-type-body-md-b); }
+  .li-row .sub { font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); }
+  .li-row .role { margin-left:auto; font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); }
+  .li-row.has-badges { align-items:flex-start; }
+  .li-badges { display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; align-items:center; }
+  .sec-acc { display:flex; align-items:center; justify-content:space-between; padding:12px 4px 6px; font:var(--hs-type-body-md-b); cursor:pointer; }
+  .sec-acc .material-symbols-outlined { color: var(--bento-theme-color-icon-base); font-size:20px; }
+  .sd-item.muted { color: var(--bento-theme-color-text-disabled); cursor: default; }
+  .carousel-arrow { width:40px; height:40px; border:0; border-radius:50%; background:var(--bento-system-sys-neutral-alt-300); color:var(--bento-theme-color-text-base); display:grid; place-items:center; cursor:pointer; }
+  .carousel-arrow:hover { background:var(--bento-theme-color-bg-surface-pressed); }
+  .carousel-arrow:disabled { background:var(--bento-theme-color-bg-surface-hovered); color:var(--bento-palette-ref-palette-dark-grey-200); cursor:not-allowed; }
+  .carousel-arrow .material-symbols-outlined { font-size:20px; }
+  .add-menu { position:fixed; min-width:210px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); padding:4px; z-index:300; display:none; }
+  .add-menu.open { display:block; }
+  .add-menu a { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:6px; font:var(--hs-type-body-md); color:var(--bento-theme-color-text-base); text-decoration:none; }
+  .add-menu a:hover, .add-menu a:focus { background:var(--bento-component-list-item-fill-hovered); outline:none; }
+  .add-menu a .material-symbols-outlined { font-size:20px; color:var(--bento-theme-color-icon-base); }
+  .team-card { position:relative; }
+  .team-card { transition: box-shadow .12s ease, border-color .12s ease; }
+  .team-card:hover { box-shadow: var(--bento-theme-elevation-shadow-raised); border-color: var(--bento-theme-color-border-base); }
+  .tc-more { position:absolute; top:10px; right:10px; width:32px; height:32px; border:0; background:transparent; border-radius:999px; display:grid; place-items:center; cursor:pointer; color:var(--bento-theme-color-icon-base); opacity:0; transition:opacity .12s ease; }
+  .team-card:hover .tc-more, .team-card:focus-within .tc-more { opacity:1; }
+  .tc-more:hover { background:var(--bento-system-sys-neutral-alt-100); }
+  .tc-more .material-symbols-outlined { font-size:20px; }
+  .card-menu { position:fixed; min-width:224px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); padding:4px; z-index:300; display:none; }
+  .card-menu.open { display:block; }
+  .card-menu button { display:flex; align-items:center; width:100%; border:0; background:transparent; cursor:pointer; padding:11px 14px; border-radius:6px; font:var(--hs-type-body-md); color:var(--bento-theme-color-text-base); text-align:left; }
+  .card-menu button:hover:not([aria-disabled="true"]), .card-menu button:focus:not([aria-disabled="true"]) { background:var(--bento-component-list-item-fill-hovered); outline:none; }
+  .card-menu button[aria-disabled="true"] { color:var(--bento-theme-color-text-disabled); cursor:default; }
+  .card-menu .sep { height:1px; background:var(--bento-theme-color-border-subtle); margin:4px 0; }
+  #ovToast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); z-index:400; display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; }
+  #ovToast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  #ovToast .material-symbols-outlined { color:var(--bento-system-sys-positive-600); }
+  .round-add { width:48px; height:48px; border:0; border-radius:50%; background:var(--bento-system-sys-neutral-alt-300); color:var(--bento-theme-color-text-base); display:grid; place-items:center; cursor:pointer; flex-shrink:0; }
+  .round-add:hover { background:var(--bento-theme-color-bg-surface-pressed); }
+  .round-add .material-symbols-outlined { font-size:22px; }
+  .hs-tabs .hs-tab { text-decoration: none !important; }
+  .hs-tabs .hs-tab.is-active::after { background: var(--bento-theme-color-text-base) !important; left:0 !important; right:0 !important; }
+  .viewall { color:var(--bento-theme-color-text-base); font:var(--hs-type-body-md-b); font-weight:700; text-decoration:none; }
+  .viewall:hover { text-decoration:underline; }
+  .caption { display:none; margin-top: 8px; font: var(--hs-type-meta); color: var(--hs-fg-secondary); font-family: ui-monospace, monospace; }
+  body { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  .suite-app { height:auto; flex:1 1 auto; min-height:0; }
+  .banner.warning.topbanner { flex:0 0 auto; }
+  /* ToggleGroup (comp-toggle-group, figma 59111-76930) — single-select segmented control; selected = check + 2px border. Keyed on .active so the existing filter JS drives it. */
+  .tg { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--bento-space-02); }
+  .tg .ti { appearance: none; border: 0; background: transparent; color: var(--bento-theme-color-text-base); border-radius: var(--bento-component-toggle-group-radius); min-height: var(--bento-component-toggle-group-min-touch); padding: var(--bento-component-toggle-group-padding-y) var(--bento-component-toggle-group-padding-x-text); display: inline-flex; align-items: center; gap: var(--bento-component-toggle-group-gap-inline); font: var(--hs-type-body-md-b); cursor: pointer; }
+  .tg .ti:hover:not(.active) { background: var(--bento-component-toggle-group-fill-hovered); }
+  .tg .ti:active { background: var(--bento-component-toggle-group-fill-pressed); }
+  .tg .ti.active { background: var(--bento-component-toggle-group-selected-fill); box-shadow: inset 0 0 0 var(--bento-component-toggle-group-border-width-selected) var(--bento-theme-color-border-selected); }
+  .tg .ti .lead, .tg .ti .check { font-size: var(--bento-theme-icon-md); }
+  .tg .ti .check { display: none; }
+  .tg .ti.active .check { display: inline-flex; }
+  .ov-filter { display:flex; align-items:center; gap:10px; margin:10px 0 4px; }
+  .ov-filter .ownlbl { font: var(--hs-type-meta-b); color: var(--bento-theme-color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+<div class="banner warning topbanner" role="status">
+  <span class="material-symbols-outlined ic">warning</span>
+  <div class="body"><div class="title">Reconnection Required</div><div class="desc">Some of your accounts are no longer publishing or collecting data, or may stop in the near future. <a class="ban-link" href="#">Click to reconnect your social accounts</a></div></div>
+  <div class="actions">
+    <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="Dismiss" style="width:32px;height:32px" onclick="this.closest('.banner').remove()"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+  </div>
+</div>
+<div class="suite-app">
+  <aside class="suite-rail" aria-label="Hootsuite products">
+    <div class="main">
+      <a class="suite-brand" href="#" aria-label="Home"><img src="../assets/hootsuite-owly-small.png" alt=""><span class="lbl">Home</span></a>
+      <a class="suite-navbtn" data-product="perch" href="#"><span class="circle"><span class="material-symbols-outlined">calendar_month</span></span><span class="lbl">Perch</span></a>
+      <a class="suite-navbtn" data-product="nest" href="#"><span class="circle"><span class="material-symbols-outlined">inbox</span></span><span class="lbl">Nest</span></a>
+      <a class="suite-navbtn" data-product="lumen" href="#"><span class="circle"><span class="material-symbols-outlined">graphic_eq</span></span><span class="lbl">Lumen</span></a>
+      <a class="suite-navbtn" data-product="parliament" href="#"><span class="circle"><span class="material-symbols-outlined">groups</span></span><span class="lbl">Parliament</span></a>
+      <a class="suite-navbtn" data-product="wisdom" href="#"><span class="circle"><span class="material-symbols-outlined">auto_awesome</span></span><span class="lbl">Wisdom</span></a>
+    </div>
+    <div class="others">
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Analytics"><span class="circle"><span class="material-symbols-outlined">bar_chart</span></span></button>
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Notifications"><span class="circle"><span class="material-symbols-outlined">notifications_none</span></span></button>
+      <span class="avatar" aria-hidden="true">HR</span>
+    </div>
+  </aside>
+
+  <aside class="suite-drawer" aria-label="Admin settings navigation">
+    <div class="sd-head">Admin settings
+      <button class="sd-collapse ne-tooltipbtn" aria-label="Collapse navigation"><span class="material-symbols-outlined">keyboard_double_arrow_left</span></button>
+    </div>
+    <div class="sd-body">
+      <button class="org-switch" aria-haspopup="listbox" aria-label="Switch organization, current: Publisher Organization">
+        <span class="hs-avatar" style="width:32px;height:32px;background:var(--hs-cat-5-bg);color:var(--hs-cat-5-fg);font:var(--hs-type-meta-b)"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <span class="nm">Publisher Organization</span>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <div class="sd-group">Organization</div>
+      <a class="sd-item on" href="overview.html" aria-current="page">Overview</a>
+      <a class="sd-item" href="teams.html">Teams</a>
+      <a class="sd-item" href="members.html">Members</a>
+      <a class="sd-item" href="social-accounts.html">Social accounts</a>
+      <a class="sd-item muted" href="#" aria-disabled="true">Settings</a>
+      <div class="sd-group">Publishing</div>
+      <a class="sd-item muted" href="#" aria-disabled="true">Tags</a>
+      <a class="sd-item muted" href="#" aria-disabled="true">Campaigns</a>
+      <a class="sd-item muted" href="#" aria-disabled="true">Link settings</a>
+      <a class="sd-item muted" href="#" aria-disabled="true">Suspended posts</a>
+    </div>
+  </aside>
+
+  <main class="suite-main">
+    <div class="banner info" role="status">
+      <span class="material-symbols-outlined ic">info</span>
+      <div class="body"><div class="desc">This is the beta social accounts and teams. <a href="#" style="color:var(--bento-theme-color-text-base);font:var(--hs-type-body-md-b);text-decoration:underline">Click here for the previous version</a></div></div>
+    </div>
+    <div class="org-band">
+      <div class="org-head">
+        <span class="org-av"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <div><h1>Publisher Organization</h1><div class="meta">52 teams · 440 members · 61 social accounts</div></div>
+        <div style="flex:1"></div>
+        <div class="hdr-search"><span class="material-symbols-outlined">search</span><input type="search" placeholder="Teams, members or social accounts" aria-label="Search teams, members or social accounts"></div>
+        <button class="round-add ne-tooltipbtn" aria-label="Add team, member, or account"><span class="material-symbols-outlined">add</span></button>
+      </div>
+    </div>
+
+    <div class="pg">
+
+      <!-- Teams -->
+      <section class="sec teams-panel">
+        <div class="sec-head">
+          <div><h2>Teams</h2><div class="sub">Recently created</div></div>
+          <div style="display:flex; gap:8px; align-items:center">
+            <button class="carousel-arrow ne-tooltipbtn" aria-label="Previous" disabled><span class="material-symbols-outlined">chevron_left</span></button>
+            <button class="carousel-arrow ne-tooltipbtn" aria-label="Next"><span class="material-symbols-outlined">chevron_right</span></button>
+            <a class="viewall" href="teams.html">View all teams</a>
+          </div>
+        </div>
+        <div class="team-row">
+          <div class="team-card"><div class="tc-av">NT</div><div class="tc-name">New team</div><div class="tc-meta">17 members<br>8 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+          <div class="team-card"><div class="tc-av">TT</div><div class="tc-name">Test team</div><div class="tc-meta">25 members<br>5 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+          <div class="team-card"><div class="tc-av">T</div><div class="tc-name">TestName</div><div class="tc-meta">23 members<br>0 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+          <div class="team-card"><div class="tc-av">TN</div><div class="tc-name">Team for test cool new name</div><div class="tc-meta">18 members<br>0 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+          <div class="team-card"><div class="tc-av">T</div><div class="tc-name">Teamwithmorethan20profiles</div><div class="tc-meta">17 members<br>14 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+          <div class="team-card"><div class="tc-av">HB</div><div class="tc-name">Field Team B</div><div class="tc-meta">20 members<br>1 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+          <div class="team-card"><div class="tc-av">HA</div><div class="tc-name">Field Team A</div><div class="tc-meta">19 members<br>1 social accounts</div><div class="tc-admins">Team admins</div><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></div>
+        </div>
+      </section>
+
+      <!-- Members + Social accounts -->
+      <div class="two-col">
+        <section class="panel">
+          <div class="panel-head"><h3>Members</h3><a class="viewall" href="members.html">View all members</a></div>
+          <nav class="hs-tabs" aria-label="Member status">
+            <a class="hs-tab is-active" aria-current="page">Active (411)</a>
+            <a class="hs-tab">Pending (29)</a>
+          </nav>
+          <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-admins">Admins <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+          <div id="ov-admins">
+            <div class="li-row"><span class="av netav"><span class="material-symbols-outlined ps">person</span></span><div><div class="nm">pat.quinn@example.com</div><div class="sub">pat.quinn@example.com</div></div><span class="role">Super Admin</span></div>
+            <div class="li-row"><span class="av netav"><span class="material-symbols-outlined ps">person</span></span><div><div class="nm">Jordan Blake</div><div class="sub">jordan.blake@example.com</div></div><span class="role">Admin</span></div>
+            <div class="li-row"><span class="av netav"><span class="material-symbols-outlined ps">person</span></span><div><div class="nm">Lee Carter</div><div class="sub">lee.carter@example.com</div></div><span class="role">Admin</span></div>
+            <a class="viewall gv-link" href="members.html">View all admins</a>
+          </div>
+          <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-members">Members <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+          <div id="ov-members">
+            <div class="li-row"><span class="av netav"><span class="material-symbols-outlined ps">person</span></span><div><div class="nm">Jordan Lee</div><div class="sub">jordan.lee@example.com</div></div><span class="role">Member</span></div>
+            <div class="li-row"><span class="av netav"><span class="material-symbols-outlined ps">person</span></span><div><div class="nm">Dana Singh</div><div class="sub">dana.singh@example.com</div></div><span class="role">Member</span></div>
+            <div class="li-row"><span class="av netav"><span class="material-symbols-outlined ps">person</span></span><div><div class="nm">Chris Hayes</div><div class="sub">chris.hayes@example.com</div></div><span class="role">Member</span></div>
+            <a class="viewall gv-link" href="members.html">View all members</a>
+          </div>
+        </section>
+
+        <section class="panel" id="ovSocialPanel">
+          <div class="panel-head"><h3>Social accounts</h3><a class="viewall" href="social-accounts.html">View all social accounts</a></div>
+          <nav class="hs-tabs" aria-label="Connection status">
+            <a class="hs-tab is-active" aria-current="page">Disconnected (36)</a>
+            <a class="hs-tab">Connected (25)</a>
+          </nav>
+          <!-- LENS 3 (destination) on the Overview, per Hill's hard requirement: see + filter private here without navigating away. DEV-EFFORT FLAG: net-new filter (none in T&O today) — validate cost with eng. Shown in Option C. LENS-PRIMACY ASSUMPTION (review, not research-backed, change here if research differs): status = primary, network = secondary, destination = tertiary filter. -->
+          <div class="ov-filter" data-opt="C">
+            <span class="ownlbl">Show</span>
+            <div class="tg" role="radiogroup" aria-label="Filter social accounts by destination" id="ovOwnFilter">
+              <button class="ti opt active" role="radio" aria-checked="true" data-owner="all"><span class="material-symbols-outlined check">check</span>All</button>
+              <button class="ti opt" role="radio" aria-checked="false" data-owner="team"><span class="material-symbols-outlined check">check</span><span class="material-symbols-outlined lead">groups</span>Team</button>
+              <button class="ti opt" role="radio" aria-checked="false" data-owner="private"><span class="material-symbols-outlined check">check</span><span class="material-symbols-outlined lead">lock</span>Private</button>
+            </div>
+          </div>
+          <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-fb">Facebook <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+          <div id="ov-fb">
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">Sky Harper</div><div class="sub">Facebook</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">Hoot JD</div><div class="sub">Facebook</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">S-test B-test</div><div class="sub">Facebook</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <a class="viewall gv-link" href="all-social-accounts.html">View all Facebook accounts</a>
+          </div>
+          <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-ig">Instagram Business <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+          <div id="ov-ig">
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/instagram.svg" alt=""></span></span><div><div class="nm">@publisher.team</div><div class="sub">Instagram Business</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/instagram.svg" alt=""></span></span><div><div class="nm">@publisher.creative</div><div class="sub">Instagram Business</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <a class="viewall gv-link" href="all-social-accounts.html">View all Instagram Business accounts</a>
+          </div>
+          <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-li">LinkedIn <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+          <div id="ov-li">
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/linkedin.svg" alt=""></span></span><div><div class="nm">Publisher Team</div><div class="sub">LinkedIn Page</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <a class="viewall gv-link" href="all-social-accounts.html">View all LinkedIn accounts</a>
+          </div>
+          <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-bluesky">Bluesky <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+          <div id="ov-bluesky">
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">mjrl73.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">pubprodone.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">hootps.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges" data-owner="private" data-opt="A C"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">robin.bsky.social</div><div class="sub">Bluesky · only you can post to this</div><div class="li-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <a class="viewall gv-link" href="social-accounts.html">View all Bluesky accounts</a>
+          </div>
+          <a class="viewall gv-link" data-opt="B" href="my-social-accounts.html">View your private accounts</a>
+        </section>
+      </div>
+      <div class="caption">screen · overview · matches staging (org header + Teams cards + Members + Social accounts) · private accounts surfaced inline (ID-5792)</div>
+    </div>
+  </main>
+</div>
+<script>
+document.querySelectorAll('.sec-acc[aria-controls]').forEach(function(h){
+  function toggle(){
+    var open = h.getAttribute('aria-expanded') === 'true';
+    h.setAttribute('aria-expanded', String(!open));
+    var t = document.getElementById(h.getAttribute('aria-controls'));
+    if (t) t.hidden = open;
+    var chev = h.querySelector('.material-symbols-outlined');
+    if (chev) chev.textContent = open ? 'keyboard_arrow_down' : 'keyboard_arrow_up';
+  }
+  h.addEventListener('click', toggle);
+  h.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+});
+</script>
+<script>
+(function(){
+  var btn = document.querySelector('.sd-collapse'); if (!btn) return;
+  btn.addEventListener('click', function(){
+    var d = document.querySelector('.suite-drawer'); if (!d) return;
+    var collapsed = d.classList.toggle('collapsed');
+    var ic = btn.querySelector('.material-symbols-outlined');
+    if (ic) ic.textContent = collapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left';
+    btn.setAttribute('aria-label', collapsed ? 'Expand navigation' : 'Collapse navigation');
+  });
+})();
+</script>
+<script>
+(function(){
+  var row = document.querySelector('.team-row'); if(!row) return;
+  var prev = document.querySelector('.carousel-arrow[aria-label="Previous"]');
+  var next = document.querySelector('.carousel-arrow[aria-label="Next"]');
+  if(!prev || !next) return;
+  function step(){ var card = row.querySelector('.team-card'); var w = card ? card.getBoundingClientRect().width : 232; return Math.round((w + 16) * 2); }
+  function sync(){ var maxLeft = row.scrollWidth - row.clientWidth - 1; prev.disabled = row.scrollLeft <= 0; next.disabled = row.scrollLeft >= maxLeft; }
+  prev.addEventListener('click', function(){ row.scrollBy({left:-step(), behavior:'smooth'}); });
+  next.addEventListener('click', function(){ row.scrollBy({left:step(), behavior:'smooth'}); });
+  row.addEventListener('scroll', sync);
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
+<script>
+(function(){
+  // Overview header search: live-filter team cards + list rows by name
+  var inp = document.querySelector('.hdr-search input');
+  if(inp){
+    var cards = [].slice.call(document.querySelectorAll('.team-card'));
+    var rows = [].slice.call(document.querySelectorAll('.li-row'));
+    inp.addEventListener('input', function(){
+      var qq = inp.value.toLowerCase().trim();
+      cards.forEach(function(c){ var n=((c.querySelector('.tc-name')||{}).textContent||'').toLowerCase(); c.style.display=(!qq||n.indexOf(qq)!==-1)?'':'none'; });
+      rows.forEach(function(r){ var n=((r.querySelector('.nm')||{}).textContent||'').toLowerCase(); r.style.display=(!qq||n.indexOf(qq)!==-1)?'':'none'; });
+    });
+  }
+  // "+" Add menu (APG menu button)
+  var addBtn = document.querySelector('.round-add');
+  if(addBtn){
+    var menu = document.createElement('div'); menu.className='add-menu'; menu.setAttribute('role','menu'); menu.setAttribute('aria-label','Add');
+    menu.innerHTML =
+      '<a role="menuitem" href="social-accounts.html"><span class="material-symbols-outlined" aria-hidden="true">share</span>Add social account</a>'+
+      '<a role="menuitem" href="teams.html"><span class="material-symbols-outlined" aria-hidden="true">groups</span>Create team</a>'+
+      '<a role="menuitem" href="members.html"><span class="material-symbols-outlined" aria-hidden="true">person_add</span>Add member</a>';
+    document.body.appendChild(menu);
+    addBtn.setAttribute('aria-haspopup','menu'); addBtn.setAttribute('aria-expanded','false');
+    var items = [].slice.call(menu.querySelectorAll('[role=menuitem]'));
+    function place(){ var r=addBtn.getBoundingClientRect(); menu.style.top=(r.bottom+4)+'px'; menu.style.left=Math.max(8, r.right-menu.offsetWidth)+'px'; }
+    function openMenu(){ menu.classList.add('open'); place(); place(); addBtn.setAttribute('aria-expanded','true'); items[0].focus(); }
+    function closeMenu(focus){ menu.classList.remove('open'); addBtn.setAttribute('aria-expanded','false'); if(focus) addBtn.focus(); }
+    addBtn.addEventListener('click', function(e){ e.stopPropagation(); if(menu.classList.contains('open')) closeMenu(false); else openMenu(); });
+    addBtn.addEventListener('keydown', function(e){ if(e.key==='ArrowDown'||e.key==='Enter'||e.key===' '){ e.preventDefault(); if(!menu.classList.contains('open')) openMenu(); } });
+    menu.addEventListener('keydown', function(e){ var i=items.indexOf(document.activeElement);
+      if(e.key==='Escape'){ e.preventDefault(); closeMenu(true); }
+      else if(e.key==='ArrowDown'){ e.preventDefault(); items[(i+1)%items.length].focus(); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); items[(i-1+items.length)%items.length].focus(); }
+      else if(e.key==='Home'){ e.preventDefault(); items[0].focus(); }
+      else if(e.key==='End'){ e.preventDefault(); items[items.length-1].focus(); } });
+    document.addEventListener('click', function(e){ if(menu.classList.contains('open') && !menu.contains(e.target) && !addBtn.contains(e.target)) closeMenu(false); });
+    window.addEventListener('resize', function(){ if(menu.classList.contains('open')) closeMenu(false); });
+  }
+})();
+</script>
+<script>
+(function(){
+  var cards=[].slice.call(document.querySelectorAll('.team-card')); if(!cards.length) return;
+  var toastEl=document.createElement('div'); toastEl.id='ovToast'; toastEl.setAttribute('role','status'); toastEl.setAttribute('aria-live','polite');
+  toastEl.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">check_circle</span><span id="ovToastMsg"></span>';
+  document.body.appendChild(toastEl);
+  var tt; function toast(m){ document.getElementById('ovToastMsg').textContent=m; toastEl.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){toastEl.classList.remove('show');},2400); }
+  var menu=document.createElement('div'); menu.className='card-menu'; menu.setAttribute('role','menu'); menu.setAttribute('aria-label','Team actions');
+  menu.innerHTML='<button role="menuitem" data-act="view">View team details</button><div class="sep"></div><button role="menuitem" data-act="add" aria-disabled="true">Add members</button><button role="menuitem" data-act="assign" aria-disabled="true">Assign social accounts</button><button role="menuitem" data-act="delete" aria-disabled="true">Delete team</button>';
+  document.body.appendChild(menu);
+  var items=[].slice.call(menu.querySelectorAll('[role=menuitem]'));
+  var current=null;
+  function place(btn){ var r=btn.getBoundingClientRect(); menu.style.top=(r.bottom+4)+'px'; menu.style.left=Math.max(8, Math.min(r.right-menu.offsetWidth, window.innerWidth-menu.offsetWidth-8))+'px'; }
+  function openM(btn){ current=btn; menu.classList.add('open'); place(btn); place(btn); btn.setAttribute('aria-expanded','true'); (items.filter(function(i){return i.getAttribute('aria-disabled')!=='true';})[0]||items[0]).focus(); }
+  function closeM(f){ menu.classList.remove('open'); if(current){ current.setAttribute('aria-expanded','false'); if(f) current.focus(); } }
+  cards.forEach(function(card){
+    var b=document.createElement('button'); b.className='tc-more ne-tooltipbtn'; b.setAttribute('aria-label','Team actions'); b.setAttribute('aria-haspopup','menu'); b.setAttribute('aria-expanded','false');
+    b.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">more_horiz</span>';
+    card.appendChild(b);
+    b.addEventListener('click', function(e){ e.stopPropagation(); if(menu.classList.contains('open')&&current===b) closeM(false); else { closeM(false); openM(b); } });
+    b.addEventListener('keydown', function(e){ if(e.key==='ArrowDown'||e.key==='Enter'||e.key===' '){ e.preventDefault(); openM(b); } });
+  });
+  function act(b){ if(b.getAttribute('aria-disabled')==='true') return; var nm=(current&&current.closest('.team-card'))?((current.closest('.team-card').querySelector('.tc-name')||{}).textContent||'team'):'team'; if(b.dataset.act==='view') toast('Opening '+nm+' (demo)'); closeM(true); }
+  menu.addEventListener('click', function(e){ var b=e.target.closest('[role=menuitem]'); if(b) act(b); });
+  menu.addEventListener('keydown', function(e){ var i=items.indexOf(document.activeElement);
+    if(e.key==='Escape'){ e.preventDefault(); closeM(true); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); items[(i+1)%items.length].focus(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); items[(i-1+items.length)%items.length].focus(); }
+    else if(e.key==='Enter'||e.key===' '){ e.preventDefault(); if(items[i]) act(items[i]); }
+    else if(e.key==='Home'){ e.preventDefault(); items[0].focus(); }
+    else if(e.key==='End'){ e.preventDefault(); items[items.length-1].focus(); } });
+  document.addEventListener('click', function(e){ if(menu.classList.contains('open') && !menu.contains(e.target) && !(current&&current.contains(e.target))) closeM(false); });
+  var trow=document.querySelector('.team-row'); if(trow) trow.addEventListener('scroll', function(){ if(menu.classList.contains('open')) closeM(false); });
+  window.addEventListener('resize', function(){ if(menu.classList.contains('open')) closeM(false); });
+})();
+</script>
+<script>
+(function(){
+  // Overview · Social accounts DESTINATION filter (Lens 3). Scoped to the Social accounts panel only.
+  var panel = document.getElementById('ovSocialPanel'); if(!panel) return;
+  var filter = document.getElementById('ovOwnFilter'); if(!filter) return;
+  var owner = 'all';
+  function apply(){
+    panel.querySelectorAll('.sec-acc[aria-controls]').forEach(function(head){
+      var body = document.getElementById(head.getAttribute('aria-controls')); if(!body) return;
+      var shown = 0;
+      body.querySelectorAll('.li-row').forEach(function(r){
+        var ro = r.getAttribute('data-owner') || 'team';
+        var ok = (owner==='all') || (ro===owner);
+        r.style.display = ok ? '' : 'none';
+        if(ok) shown++;
+      });
+      // hide the network sub-heading + group when the destination filter empties it
+      head.style.display = shown ? '' : 'none';
+      body.style.display = shown ? '' : 'none';
+    });
+  }
+  filter.addEventListener('click', function(e){
+    var b = e.target.closest('.opt'); if(!b) return;
+    filter.querySelectorAll('.opt').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-checked','false'); });
+    b.classList.add('active'); b.setAttribute('aria-checked','true');
+    owner = b.getAttribute('data-owner'); apply();
+  });
+  // Only Option C exposes the filter; reset to All when switching away from C.
+  document.addEventListener('optionchange', function(e){
+    if(e.detail && e.detail.option!=='C'){
+      owner='all';
+      filter.querySelectorAll('.opt').forEach(function(x){ var on=x.getAttribute('data-owner')==='all'; x.classList.toggle('active',on); x.setAttribute('aria-checked', on?'true':'false'); });
+    }
+    apply();
+  });
+  apply();
+})();
+</script>
+<script>
+(function(){
+  // Per Hill's review: show WHICH TEAM each account belongs to on the Overview rows. Network stays the
+  // primary grouping; team is secondary metadata (a badge), not a competing grouping. Private rows are a
+  // single destination so they keep the Private badge, no team. Demo assignments; real data comes from backend.
+  var teams = {
+    'Sky Harper':'Growth Team', 'Hoot JD':'Growth Team', 'S-test B-test':'Content Team',
+    '@publisher.team':'Publisher Team', '@publisher.creative':'Content Team',
+    'Publisher Team':'Growth Team',
+    'mjrl73.bsky.social':'Publisher Team', 'pubprodone.bsky.social':'Publisher Team', 'hootps.bsky.social':'Field Team A'
+  };
+  var panel = document.getElementById('ovSocialPanel'); if(!panel) return;
+  panel.querySelectorAll('.li-row').forEach(function(r){
+    if(r.getAttribute('data-owner')==='private') return;
+    var nmEl = r.querySelector('.nm'); if(!nmEl) return;
+    var team = teams[nmEl.textContent.trim()]; if(!team) return;
+    var badges = r.querySelector('.li-badges'); if(!badges || badges.querySelector('.team-badge')) return;
+    var b = document.createElement('span');
+    b.className = 'hs-badge hs-badge--neutral team-badge';
+    b.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">groups</span>' + team;
+    badges.insertBefore(b, badges.firstChild);
+  });
+})();
+</script>
+<script src="option-switcher.js"></script>
+<script src="tabs.js"></script>
+<script src="profile-menu.js"></script>
+<script src="a11y.js"></script>
+</body></html>

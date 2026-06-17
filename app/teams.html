@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- Suite Settings · Admin settings → All teams (full page, staging parity) -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin settings · All teams</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../templates/src/suite-shell.css">
+<link rel="stylesheet" href="../templates/src/suite-drawer.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; background: var(--bento-theme-color-bg-app); color: var(--bento-theme-color-text-base); }
+  body { font: var(--hs-type-body-md); -webkit-font-smoothing: antialiased; }
+  .suite-main { background: var(--bento-theme-color-bg-surface-recessed) !important; overflow-y: auto; }
+  .hs-btn--primary:disabled { color: var(--bento-palette-ref-palette-dark-grey-200) !important; }
+  .org-switch { display:flex; align-items:center; gap:8px; height:40px; margin:4px 0 8px; padding:0 10px; border-radius:8px; border:0; background:transparent; cursor:pointer; width:100%; box-sizing:border-box; }
+  .org-switch .nm { font: var(--hs-type-body-md-b); flex:1; text-align:left; }
+
+  .page-top { display:flex; align-items:center; gap:12px; padding:22px 32px; }
+  .page-top .back { width:32px; height:32px; border:0; background:transparent; border-radius:999px; display:grid; place-items:center; cursor:pointer; color:var(--bento-theme-color-icon-base); text-decoration:none; }
+  .page-top .back:hover { background:var(--bento-system-sys-neutral-alt-100); }
+  .page-top h1 { font: var(--hs-type-title-section); margin:0; flex:1; }
+
+  .list-panel { background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; margin:0 32px 48px; padding:24px 28px; }
+  .list-panel h2 { font: var(--hs-type-title-sub); margin:0 0 6px; }
+  .learn-link { display:inline-block; margin-bottom:18px; color:var(--bento-theme-color-text-link); font:var(--hs-type-body-md); text-decoration:none; }
+  .learn-link:hover { text-decoration:underline; }
+  .searchbar { display:flex; align-items:center; gap:8px; border:1px solid var(--bento-theme-color-border-base); border-radius:8px; padding:0 12px; height:48px; box-sizing:border-box; max-width:560px; background:var(--bento-theme-color-bg-surface); margin-bottom:8px; }
+  .searchbar .material-symbols-outlined { color:var(--bento-theme-color-icon-subtle); font-size:20px; }
+  .searchbar input { border:0; outline:0; background:transparent; flex:1; font:var(--hs-type-body-md); }
+
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; padding:14px 16px; font:var(--hs-type-meta-b); color:var(--bento-theme-color-text-subtle); border-bottom:1px solid var(--bento-theme-color-border-subtle); font-weight:700; }
+  th .sort { display:inline-flex; align-items:center; gap:4px; }
+  th .material-symbols-outlined { font-size:18px; }
+  td { padding:16px 16px; border-bottom:1px solid var(--bento-theme-color-border-subtle); font:var(--hs-type-body-md); vertical-align:middle; }
+  tr:last-child td { border-bottom:0; }
+  tr:hover td { background:var(--bento-theme-color-bg-surface-hovered); }
+  .team-cell { display:flex; align-items:center; gap:12px; font:var(--hs-type-body-md-b); }
+  .tc-av { width:32px; height:32px; border-radius:8px; display:grid; place-items:center; font:var(--hs-type-meta-b); background:var(--bento-system-sys-neutral-alt-100); color:var(--bento-theme-color-text-subtle); flex-shrink:0; }
+  .subtle { color:var(--bento-theme-color-text-subtle); }
+  .stack { display:flex; }
+  .stack .pav { width:32px; height:32px; border-radius:999px; background:var(--bento-system-sys-neutral-alt-300); display:grid; place-items:center; border:2px solid var(--bento-theme-color-bg-surface); margin-left:-8px; color:var(--bento-theme-color-icon-base); }
+  .stack .pav:first-child { margin-left:0; }
+  .stack .pav .material-symbols-outlined { font-size:20px; font-variation-settings:'FILL' 1; }
+</style>
+</head>
+<body>
+<div class="suite-app">
+  <aside class="suite-rail" aria-label="Hootsuite products">
+    <div class="main">
+      <a class="suite-brand" href="overview.html" aria-label="Home"><img src="../assets/hootsuite-owly-small.png" alt=""><span class="lbl">Home</span></a>
+      <a class="suite-navbtn" data-product="perch" href="#"><span class="circle"><span class="material-symbols-outlined">calendar_month</span></span><span class="lbl">Perch</span></a>
+      <a class="suite-navbtn" data-product="nest" href="#"><span class="circle"><span class="material-symbols-outlined">inbox</span></span><span class="lbl">Nest</span></a>
+      <a class="suite-navbtn" data-product="lumen" href="#"><span class="circle"><span class="material-symbols-outlined">graphic_eq</span></span><span class="lbl">Lumen</span></a>
+      <a class="suite-navbtn" data-product="parliament" href="#"><span class="circle"><span class="material-symbols-outlined">groups</span></span><span class="lbl">Parliament</span></a>
+      <a class="suite-navbtn" data-product="wisdom" href="#"><span class="circle"><span class="material-symbols-outlined">auto_awesome</span></span><span class="lbl">Wisdom</span></a>
+    </div>
+    <div class="others">
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Analytics"><span class="circle"><span class="material-symbols-outlined">bar_chart</span></span></button>
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Notifications"><span class="circle"><span class="material-symbols-outlined">notifications_none</span></span></button>
+      <span class="avatar" aria-hidden="true">HR</span>
+    </div>
+  </aside>
+
+  <aside class="suite-drawer" aria-label="Admin settings navigation">
+    <div class="sd-head">Admin settings
+      <button class="sd-collapse ne-tooltipbtn" aria-label="Collapse navigation"><span class="material-symbols-outlined">keyboard_double_arrow_left</span></button>
+    </div>
+    <div class="sd-body">
+      <button class="org-switch" aria-haspopup="listbox" aria-label="Switch organization, current: Publisher Organization">
+        <span class="hs-avatar" style="width:32px;height:32px;background:var(--hs-cat-5-bg);color:var(--hs-cat-5-fg);font:var(--hs-type-meta-b)"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <span class="nm">Publisher Organization</span>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <div class="sd-group">Organization</div>
+      <a class="sd-item" href="overview.html">Overview</a>
+      <a class="sd-item on" href="teams.html" aria-current="page">Teams</a>
+      <a class="sd-item" href="members.html">Members</a>
+      <a class="sd-item" href="social-accounts.html">Social accounts</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Settings</a>
+      <div class="sd-group">Publishing</div>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Tags</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Campaigns</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Link settings</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Suspended posts</a>
+    </div>
+  </aside>
+
+  <main class="suite-main">
+    <div class="page-top">
+      <a class="back ne-tooltipbtn" href="overview.html" aria-label="Back to overview"><span class="material-symbols-outlined">chevron_left</span></a>
+      <h1>All teams</h1>
+      <button class="hs-btn hs-btn--primary" disabled>Create Team</button>
+    </div>
+
+    <div class="list-panel">
+      <h2>52 teams in Publisher Organization</h2>
+      <a class="learn-link" href="#">Learn more about teams management</a>
+      <div class="searchbar"><span class="material-symbols-outlined">search</span><input type="search" placeholder="Search for teams" aria-label="Search for teams"></div>
+      <table>
+        <thead><tr>
+          <th style="width:30%" scope="col" aria-sort="ascending"><span class="sort">Team <span class="material-symbols-outlined">arrow_drop_up</span></span></th>
+          <th scope="col">Created on</th><th scope="col">Team admins</th><th scope="col">Members</th><th scope="col">Social accounts</th><th scope="col" style="text-align:right">Actions</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><div class="team-cell"><span class="tc-av">BT</span>Growth Team</div></td><td class="subtle">Jun 29, 2015</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>49 members</td><td>0 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">B</span>GrowthTeam</div></td><td class="subtle">Oct 6, 2014</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>81 members</td><td>6 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">CL</span>Cage Lyfe</div></td><td class="subtle">Feb 8, 2019</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>30 members</td><td>2 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">CT</span>Content Sources Test Team</div></td><td class="subtle">Jul 6, 2018</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>32 members</td><td>0 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">DT</span>Content Favorites Team</div></td><td class="subtle">Jun 11, 2021</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>19 members</td><td>1 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">DT</span>Content Team</div></td><td class="subtle">Mar 2, 2021</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>22 members</td><td>2 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">GT</span>Regional Team</div></td><td class="subtle">Jan 11, 2022</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>18 members</td><td>2 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">HA</span>Field Team A</div></td><td class="subtle">May 30, 2022</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>19 members</td><td>1 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">HB</span>Field Team B</div></td><td class="subtle">May 30, 2022</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>20 members</td><td>1 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          <tr><td><div class="team-cell"><span class="tc-av">HT</span>Field Test Team</div></td><td class="subtle">Nov 6, 2020</td><td><div class="stack" role="img" aria-label="Team admins"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>19 members</td><td>0 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="banner.js"></script>
+<script src="nav.js"></script>
+<script src="profile-menu.js"></script>
+<script src="table-search.js"></script>
+<script src="a11y.js"></script>
+</body></html>

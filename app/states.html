@@ -1,0 +1,121 @@
+<!doctype html>
+<!-- Suite Settings · Social accounts — empty / loading / error states (ID-5792 includes "no private accounts yet") -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social accounts · states</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../templates/src/suite-shell.css">
+<link rel="stylesheet" href="../templates/src/suite-drawer.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; background: var(--bento-theme-color-bg-app); color: var(--bento-theme-color-text-base); }
+  body { font: var(--hs-type-body-md); -webkit-font-smoothing: antialiased; }
+  .suite-main { background: var(--bento-theme-color-bg-surface-recessed) !important; overflow-y: auto; }
+  .org-switch { display:flex; align-items:center; gap:8px; height:40px; margin:4px 0 8px; padding:0 10px; border-radius:8px; border:0; background:transparent; cursor:pointer; width:100%; box-sizing:border-box; }
+  .org-switch .nm { font: var(--hs-type-body-md-b); flex:1; text-align:left; }
+  .pg { padding: 28px 32px 80px; max-width: 1000px; }
+  .pg h1 { font: var(--hs-type-title-section); margin:0 0 16px; }
+  .state-label { font: var(--hs-type-meta-b); color: var(--bento-theme-color-text-subtle); text-transform: uppercase; letter-spacing:.06em; margin: 24px 0 8px; }
+  .panel { background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); border-radius: 12px; }
+  /* host the .suite-state inside a fixed-height panel for the demo */
+  .panel .suite-state { min-height: 280px; }
+  /* skeleton rows */
+  .sk-row { display:flex; align-items:center; gap:14px; padding:16px 20px; border-top:1px solid var(--bento-theme-color-border-subtle); }
+  .sk-row:first-child { border-top:0; }
+  .sk-av { width:40px; height:40px; border-radius:999px; }
+  .sk-line { height:12px; border-radius:6px; }
+</style>
+</head>
+<body>
+<div class="suite-app">
+  <aside class="suite-rail" aria-label="Hootsuite products">
+    <div class="main">
+      <a class="suite-brand" href="#" aria-label="Home"><img src="../assets/hootsuite-owly-small.png" alt=""><span class="lbl">Home</span></a>
+      <a class="suite-navbtn" data-product="perch" href="#"><span class="circle"><span class="material-symbols-outlined">calendar_month</span></span><span class="lbl">Perch</span></a>
+      <a class="suite-navbtn" data-product="nest" href="#"><span class="circle"><span class="material-symbols-outlined">inbox</span></span><span class="lbl">Nest</span></a>
+      <a class="suite-navbtn" data-product="lumen" href="#"><span class="circle"><span class="material-symbols-outlined">graphic_eq</span></span><span class="lbl">Lumen</span></a>
+      <a class="suite-navbtn" data-product="parliament" href="#"><span class="circle"><span class="material-symbols-outlined">groups</span></span><span class="lbl">Parliament</span></a>
+      <a class="suite-navbtn" data-product="wisdom" href="#"><span class="circle"><span class="material-symbols-outlined">auto_awesome</span></span><span class="lbl">Wisdom</span></a>
+    </div>
+    <div class="others">
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Analytics"><span class="circle"><span class="material-symbols-outlined">bar_chart</span></span></button>
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Notifications"><span class="circle"><span class="material-symbols-outlined">notifications_none</span></span></button>
+      <span class="avatar" aria-hidden="true">HR</span>
+    </div>
+  </aside>
+
+  <aside class="suite-drawer" aria-label="Admin settings navigation">
+    <div class="sd-head">Admin settings
+      <button class="sd-collapse ne-tooltipbtn" aria-label="Collapse navigation"><span class="material-symbols-outlined">keyboard_double_arrow_left</span></button>
+    </div>
+    <div class="sd-body">
+      <button class="org-switch" aria-haspopup="listbox" aria-label="Switch organization, current: Publisher Organization">
+        <span class="hs-avatar" style="width:32px;height:32px;background:var(--hs-cat-5-bg);color:var(--hs-cat-5-fg);font:var(--hs-type-meta-b)"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <span class="nm">Publisher Organization</span>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <div class="sd-group">Organization</div>
+      <a class="sd-item" href="overview.html">Overview</a>
+      <a class="sd-item" href="teams.html">Teams</a>
+      <a class="sd-item" href="members.html">Members</a>
+      <a class="sd-item on" href="social-accounts.html" aria-current="page">Social accounts</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Settings</a>
+      <div class="sd-group">Publishing</div>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Tags</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Campaigns</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Link settings</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Suspended posts</a>
+    </div>
+  </aside>
+
+  <main class="suite-main">
+    <div class="pg">
+      <h1>Social accounts — states</h1>
+
+      <!-- EMPTY: no private accounts yet (the ID-5792 empty case) -->
+      <div class="state-label">Empty · Private filter, no private accounts yet</div>
+      <div class="panel">
+        <div class="suite-state empty">
+          <div class="suite-state-inner">
+            <div class="ico"><span class="material-symbols-outlined">lock</span></div>
+            <h2>No private accounts yet</h2>
+            <p>Private accounts are visible only to you, and only you can publish to them. They aren't shared with any team or organization.</p>
+            <div class="acts">
+              <button class="hs-btn hs-btn--primary"><span class="material-symbols-outlined">lock</span>Add private account</button>
+              <a class="hs-link" href="#">Learn more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOADING: skeleton -->
+      <div class="state-label">Loading</div>
+      <div class="panel">
+        <div class="sk-row"><span class="suite-sk sk-av"></span><span class="suite-sk sk-line" style="width:220px"></span><span class="suite-sk sk-line" style="width:90px; margin-left:auto"></span></div>
+        <div class="sk-row"><span class="suite-sk sk-av"></span><span class="suite-sk sk-line" style="width:180px"></span><span class="suite-sk sk-line" style="width:90px; margin-left:auto"></span></div>
+        <div class="sk-row"><span class="suite-sk sk-av"></span><span class="suite-sk sk-line" style="width:240px"></span><span class="suite-sk sk-line" style="width:90px; margin-left:auto"></span></div>
+      </div>
+
+      <!-- ERROR: amber, never red -->
+      <div class="state-label">Error</div>
+      <div class="panel">
+        <div class="suite-state error">
+          <div class="suite-state-inner">
+            <div class="ico"><span class="material-symbols-outlined">warning</span></div>
+            <h2>Couldn't load your accounts</h2>
+            <p>Something went wrong fetching your social accounts. Check your connection and try again.</p>
+            <div class="acts">
+              <button class="hs-btn hs-btn--primary"><span class="material-symbols-outlined">refresh</span>Try again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="nav.js"></script>
+<script src="profile-menu.js"></script>
+<script src="a11y.js"></script>
+</body></html>

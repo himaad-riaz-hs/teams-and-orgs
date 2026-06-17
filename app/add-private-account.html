@@ -1,0 +1,91 @@
+<!doctype html>
+<!-- Suite Settings · Add a private account (ID-5792 add flow) — Modal + ListboxSelectableItem -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add a private account</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; min-height: 100vh; background: var(--bento-system-sys-neutral-alt-200); }
+  body { font: var(--hs-type-body-md); color: var(--bento-theme-color-text-base); -webkit-font-smoothing: antialiased; }
+
+  /* Scrim — from preview/modal.html */
+  .scrim { position: fixed; inset: 0; background: var(--bento-theme-color-overlay-scrim); display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
+
+  /* Modal — from preview/modal.html */
+  .modal { width: 448px; max-width: 92%; background: var(--bento-theme-color-bg-surface); border-radius: var(--bento-theme-border-radii-03); box-shadow: var(--bento-theme-elevation-shadow-overlay-bottom); }
+  .modal-head { display: flex; align-items: center; gap: 12px; padding: 16px 40px; border-bottom: 1px solid var(--bento-theme-color-border-subtle); }
+  .modal-head .ttl { font: var(--hs-type-title-base); flex: 1; }
+  .modal-body { padding: 16px 40px 20px; font: var(--hs-type-body-md); }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 16px 40px 32px; }
+
+  /* ListboxSelectableItem — from preview/listbox-selectable-item.html */
+  .lb { display: flex; flex-direction: column; padding: 4px; background: var(--bento-theme-color-bg-surface); border: 1px solid var(--bento-theme-color-border-subtle); border-radius: 8px; }
+  .li { display: flex; align-items: center; gap: var(--bento-component-list-item-gap-inline); padding: var(--bento-component-list-item-padding-y) var(--bento-component-list-item-padding-x);
+    border-radius: var(--bento-component-list-item-border-radius); cursor: pointer; }
+  .li:hover { background: var(--bento-component-list-item-fill-hovered); }
+  .li.selected { background: var(--bento-component-list-item-fill-selected); }
+  .li .ic { font-size: 24px; color: var(--bento-theme-color-icon-base); }
+  .li .t { font: var(--hs-type-body-md-b); color: var(--bento-theme-color-text-base); flex: 1; }
+  .li .d { font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); }
+
+  .explainer { display: flex; gap: 10px; padding: 12px; margin-bottom: 16px; border-radius: 8px; background: var(--bento-component-alert-info-fill); }
+  .explainer .material-symbols-outlined { font-size: 20px; color: var(--bento-theme-color-icon-info); flex-shrink: 0; }
+  .explainer .x { font: var(--hs-type-body-sm); }
+  .assumption { margin-top: 14px; font: var(--hs-type-meta); color: var(--bento-theme-color-text-subtle); font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="scrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="apa-title">
+    <div class="modal-head">
+      <div class="ttl" id="apa-title">Add a private account</div>
+      <button class="hs-btn hs-btn--ghost hs-btn--icon" aria-label="Close" style="width:32px;height:32px"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="explainer">
+        <span class="material-symbols-outlined">lock</span>
+        <div class="x">A private account is visible only to you, and only you can publish to it. It isn't shared with any team or organization.</div>
+      </div>
+
+      <div style="font: var(--hs-type-body-sm-b); margin-bottom:6px">Choose a network</div>
+      <div class="lb" role="listbox" aria-label="Network">
+        <div class="li selected" role="option" aria-selected="true">
+          <span class="hs-radio is-on"></span>
+          <span class="material-symbols-outlined ic">cloud</span>
+          <div style="flex:1"><span class="t">Bluesky</span></div>
+        </div>
+        <div class="li" role="option" aria-selected="false">
+          <span class="hs-radio"></span>
+          <span class="material-symbols-outlined ic">photo_camera</span>
+          <div style="flex:1"><span class="t">Instagram</span></div>
+        </div>
+        <div class="li" role="option" aria-selected="false">
+          <span class="hs-radio"></span>
+          <span class="material-symbols-outlined ic">tag</span>
+          <div style="flex:1"><span class="t">X</span></div>
+        </div>
+        <div class="li" role="option" aria-selected="false">
+          <span class="hs-radio"></span>
+          <span class="material-symbols-outlined ic">thumb_up</span>
+          <div style="flex:1"><span class="t">Facebook</span></div>
+        </div>
+        <div class="li" role="option" aria-selected="false">
+          <span class="hs-radio"></span>
+          <span class="material-symbols-outlined ic">work</span>
+          <div style="flex:1"><span class="t">LinkedIn</span></div>
+        </div>
+      </div>
+
+      <div class="assumption">ASSUMPTION (pending Deep): you connect via the same OAuth flow as a team account; the account is owner-only and is not assigned to any team.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="hs-btn hs-btn--ghost">Cancel</button>
+      <button class="hs-btn hs-btn--primary"><span class="material-symbols-outlined">link</span>Connect account</button>
+    </div>
+  </div>
+</div>
+<script src="a11y.js"></script>
+</body></html>

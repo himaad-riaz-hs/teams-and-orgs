@@ -1,0 +1,283 @@
+<!doctype html>
+<!-- Suite Settings · My social accounts — Option B member-scoped private accounts (ID-5792) -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My social accounts</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../templates/src/suite-shell.css">
+<link rel="stylesheet" href="../templates/src/suite-drawer.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; background: var(--bento-theme-color-bg-app); color: var(--bento-theme-color-text-base); }
+  body { font: var(--hs-type-body-md); -webkit-font-smoothing: antialiased; }
+  .suite-main { background: var(--bento-theme-color-bg-surface-recessed) !important; overflow-y: auto; }
+
+  .back { display:inline-flex; align-items:center; gap:6px; font:var(--hs-type-body-sm-b); color:var(--bento-theme-color-text-base); text-decoration:none; margin-bottom:8px; }
+  .back .material-symbols-outlined { font-size:18px; }
+  .pg { padding: 28px 32px 80px; max-width: 880px; }
+  .page-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:16px; }
+  .page-head h1 { font: var(--hs-type-title-section); margin:0; flex:1; }
+  .page-head p { font: var(--hs-type-body-md); color: var(--bento-theme-color-text-subtle); margin:4px 0 0; }
+
+  .explainer { display:flex; gap:10px; padding:12px 16px; margin-bottom:16px; border-radius:12px; background: var(--bento-component-alert-info-fill); }
+  .explainer .material-symbols-outlined { font-size:20px; color: var(--bento-theme-color-icon-info); flex-shrink:0; }
+  .explainer .x { font: var(--hs-type-body-sm); }
+
+  .acc-list { border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; background:var(--bento-theme-color-bg-surface); }
+  .priv-head { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--bento-theme-color-border-subtle); }
+  .priv-head > .material-symbols-outlined { color:var(--bento-theme-color-icon-base); }
+  .priv-head .pt { font:var(--hs-type-body-md-b); flex:1; }
+
+  .sa-row { position:relative; display:grid; grid-template-columns:40px 1fr 40px; align-items:center; gap:14px; padding:14px 16px; border-top:1px solid var(--bento-theme-color-border-subtle); }
+  .sa-row:first-of-type { border-top:0; }
+  .sa-row .av { width:40px; height:40px; border-radius:999px; background:var(--bento-system-sys-neutral-alt-300); display:grid; place-items:center; color:var(--bento-theme-color-icon-base); position:relative; }
+  .sa-row .av > .material-symbols-outlined { font-size:24px; font-variation-settings:'FILL' 1; }
+  .sa-row .av .netbadge { position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:999px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); display:grid; place-items:center; }
+  .sa-row .av .netbadge img { width:11px; height:11px; display:block; }
+  .sa-row .av .netbadge .material-symbols-outlined { font-size:11px; color:var(--bento-theme-color-icon-base); }
+  .sa-name { font: var(--hs-type-body-md-b); }
+  .sa-sub { font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); }
+  .sa-badges { display:flex; align-items:center; gap:8px; margin-top:6px; flex-wrap:wrap; }
+
+  .rowmenu { position:absolute; right:12px; top:52px; z-index:30; min-width:180px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); padding:4px; display:none; }
+  .rowmenu.open { display:block; }
+  .rowmenu button { display:flex; align-items:center; gap:10px; width:100%; border:0; background:transparent; cursor:pointer; padding:10px 12px; border-radius:6px; font:var(--hs-type-body-md); color:var(--bento-theme-color-text-base); text-align:left; }
+  .rowmenu button:hover { background:var(--bento-component-list-item-fill-hovered); }
+  .rowmenu .material-symbols-outlined { font-size:18px; color:var(--bento-theme-color-icon-base); }
+
+  .scrim { position:fixed; inset:0; background:var(--bento-theme-color-overlay-scrim); display:none; place-items:center; padding:24px; box-sizing:border-box; z-index:100; }
+  .scrim.open { display:grid; }
+  .modal { width:448px; max-width:92%; background:var(--bento-theme-color-bg-surface); border-radius:var(--bento-theme-border-radii-03); box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); }
+  .modal.sm { width:408px; }
+  .modal-head { display:flex; align-items:center; gap:12px; padding:16px 40px; border-bottom:1px solid var(--bento-theme-color-border-subtle); }
+  .modal-head .ttl { font:var(--hs-type-title-base); flex:1; }
+  .modal-body { padding:16px 40px 20px; font:var(--hs-type-body-md); }
+  .modal-foot { display:flex; justify-content:flex-end; gap:8px; padding:16px 40px 32px; }
+  .lb { display:flex; flex-direction:column; padding:4px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; }
+  .li { display:flex; align-items:center; gap:var(--bento-component-list-item-gap-inline); padding:var(--bento-component-list-item-padding-y) var(--bento-component-list-item-padding-x); border-radius:var(--bento-component-list-item-border-radius); cursor:pointer; }
+  .li:hover { background:var(--bento-component-list-item-fill-hovered); }
+  .li.selected { background:var(--bento-component-list-item-fill-selected); }
+  .li .ic { font-size:24px; color:var(--bento-theme-color-icon-base); }
+  .li .t { font:var(--hs-type-body-md-b); flex:1; }
+  .assumption { margin-top:14px; font:var(--hs-type-meta); color:var(--bento-theme-color-text-subtle); font-family:ui-monospace, monospace; }
+
+  #toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); z-index:200; display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  #toast .material-symbols-outlined { color:var(--bento-system-sys-positive-600); }
+  .hs-badge--negative { color: var(--bento-system-sys-negative-600); } /* disconnected badge: heavier negative-600 to match staging */
+  .caption { display:none; margin-top:24px; font:var(--hs-type-meta); color:var(--hs-fg-secondary); font-family:ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="suite-app">
+  <aside class="suite-rail" aria-label="Hootsuite products">
+    <div class="main">
+      <a class="suite-brand" href="overview.html" aria-label="Home"><img src="../assets/hootsuite-owly-small.png" alt=""><span class="lbl">Home</span></a>
+      <a class="suite-navbtn" data-product="perch" href="#"><span class="circle"><span class="material-symbols-outlined">calendar_month</span></span><span class="lbl">Perch</span></a>
+      <a class="suite-navbtn" data-product="nest" href="#"><span class="circle"><span class="material-symbols-outlined">inbox</span></span><span class="lbl">Nest</span></a>
+      <a class="suite-navbtn" data-product="lumen" href="#"><span class="circle"><span class="material-symbols-outlined">graphic_eq</span></span><span class="lbl">Lumen</span></a>
+      <a class="suite-navbtn" data-product="parliament" href="#"><span class="circle"><span class="material-symbols-outlined">groups</span></span><span class="lbl">Parliament</span></a>
+      <a class="suite-navbtn" data-product="wisdom" href="#"><span class="circle"><span class="material-symbols-outlined">auto_awesome</span></span><span class="lbl">Wisdom</span></a>
+    </div>
+    <div class="others">
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Analytics"><span class="circle"><span class="material-symbols-outlined">bar_chart</span></span></button>
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Notifications"><span class="circle"><span class="material-symbols-outlined">notifications_none</span></span></button>
+      <span class="avatar" aria-hidden="true">HR</span>
+    </div>
+  </aside>
+
+  <aside class="suite-drawer" aria-label="Admin settings navigation">
+    <div class="sd-head">Admin settings
+      <button class="sd-collapse ne-tooltipbtn" aria-label="Collapse navigation"><span class="material-symbols-outlined">keyboard_double_arrow_left</span></button>
+    </div>
+    <div class="sd-body">
+      <button class="org-switch" aria-haspopup="listbox" aria-label="Switch organization, current: Publisher Organization" style="display:flex;align-items:center;gap:8px;height:40px;margin:4px 0 8px;padding:0 10px;border-radius:8px;border:0;background:transparent;cursor:pointer;width:100%;box-sizing:border-box">
+        <span class="hs-avatar" style="width:32px;height:32px;background:var(--hs-cat-5-bg);color:var(--hs-cat-5-fg);font:var(--hs-type-meta-b)"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <span style="font:var(--hs-type-body-md-b);flex:1;text-align:left">Publisher Organization</span>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <div class="sd-group">Organization</div>
+      <a class="sd-item" href="overview.html">Overview</a>
+      <a class="sd-item" href="teams.html">Teams</a>
+      <a class="sd-item" href="members.html">Members</a>
+      <a class="sd-item on" href="social-accounts.html" aria-current="page">Social accounts</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Settings</a>
+      <div class="sd-group">Publishing</div>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Tags</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Campaigns</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Link settings</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Suspended posts</a>
+    </div>
+  </aside>
+
+  <main class="suite-main">
+    <div class="pg">
+      <a class="back" href="social-accounts.html"><span class="material-symbols-outlined">arrow_back</span>Social accounts</a>
+      <div class="page-head">
+        <div style="flex:1; min-width:0"><h1>My social accounts</h1><p>Personal accounts that belong to you. Only you can see and publish to these.</p></div>
+        <div><button class="hs-btn hs-btn--primary" data-open="addModal"><span class="material-symbols-outlined">add</span>Add private account</button></div>
+      </div>
+
+      <div class="explainer"><span class="material-symbols-outlined">info</span><div class="x">These accounts aren't shared with your team or organization, and admins don't manage them. They're used for things like Amplify, where you post from your own profiles.</div></div>
+
+      <div class="acc-list" id="privList">
+        <div class="priv-head"><span class="material-symbols-outlined">lock</span><div class="pt">Private accounts</div><span style="font:var(--hs-type-body-sm);color:var(--bento-theme-color-text-subtle)">3 accounts</span></div>
+        <div class="sa-row" data-status="disconnected" data-name="@robin.bsky.social">
+          <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+          <div class="sa-info"><div class="sa-name">@robin.bsky.social</div><div class="sa-sub">Bluesky · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--negative">Disconnected</span><button class="hs-btn hs-btn--ghost hs-btn--sm" data-act="reconnect">Reconnect</button></div></div>
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+        </div>
+        <div class="sa-row" data-status="connected" data-name="@robin-personal.bsky.social">
+          <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+          <div class="sa-info"><div class="sa-name">@robin-personal.bsky.social</div><div class="sa-sub">Bluesky · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+        </div>
+        <div class="sa-row" data-status="connected" data-name="@robin.creates">
+          <span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><img src="../assets/icons/instagram.svg" alt=""></span></span>
+          <div class="sa-info"><div class="sa-name">@robin.creates</div><div class="sa-sub">Instagram · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>
+        </div>
+      </div>
+
+      <div class="acc-list" id="privEmpty" style="display:none">
+        <div style="padding:48px 24px; text-align:center">
+          <div style="width:48px;height:48px;border-radius:999px;background:var(--bento-system-sys-neutral-alt-300);display:grid;place-items:center;margin:0 auto 16px"><span class="material-symbols-outlined" style="font-size:26px;color:var(--bento-theme-color-icon-base)">lock</span></div>
+          <h3 style="font:var(--hs-type-title-sub);margin:0 0 6px">No private accounts yet</h3>
+          <p style="font:var(--hs-type-body-md);color:var(--bento-theme-color-text-subtle);max-width:430px;margin:0 auto 16px">Connect a personal account that only you can see and post to, for things like Amplify. It won't be shared with your team or organization.</p>
+          <button class="hs-btn hs-btn--primary" data-open="addModal"><span class="material-symbols-outlined">add</span>Add private account</button>
+        </div>
+      </div>
+
+      <div class="caption">flow · my-social-accounts · Option B member space · add / a row's ⋯ to walk add + remove · remove all to see empty state · ASSUMES owner-only (pending Deep)</div>
+    </div>
+  </main>
+</div>
+
+<div class="scrim" id="addModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="apa-title">
+    <div class="modal-head"><div class="ttl" id="apa-title">Add a private account</div>
+      <button class="hs-btn hs-btn--ghost hs-btn--icon" aria-label="Close" data-close style="width:32px;height:32px"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="explainer"><span class="material-symbols-outlined">lock</span><div class="x">A private account is visible only to you, and only you can publish to it. It isn't shared with any team or organization.</div></div>
+      <div style="font: var(--hs-type-body-sm-b); margin-bottom:6px">Choose a network</div>
+      <div class="lb" role="listbox" aria-label="Network" id="netList">
+        <div class="li selected" role="option" aria-selected="true" data-net="Bluesky" data-icon="cloud"><span class="hs-radio is-on"></span><span class="material-symbols-outlined ic">cloud</span><div style="flex:1"><span class="t">Bluesky</span></div></div>
+        <div class="li" role="option" aria-selected="false" data-net="Instagram" data-icon="photo_camera"><span class="hs-radio"></span><span class="material-symbols-outlined ic">photo_camera</span><div style="flex:1"><span class="t">Instagram</span></div></div>
+        <div class="li" role="option" aria-selected="false" data-net="X" data-icon="tag"><span class="hs-radio"></span><span class="material-symbols-outlined ic">tag</span><div style="flex:1"><span class="t">X</span></div></div>
+        <div class="li" role="option" aria-selected="false" data-net="LinkedIn" data-icon="work"><span class="hs-radio"></span><span class="material-symbols-outlined ic">work</span><div style="flex:1"><span class="t">LinkedIn</span></div></div>
+      </div>
+      <div class="assumption">ASSUMPTION (pending Deep): same OAuth flow; owner-only; not assigned to any team.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="hs-btn hs-btn--ghost" data-close>Cancel</button>
+      <button class="hs-btn hs-btn--primary" id="connectBtn"><span class="material-symbols-outlined">link</span>Connect account</button>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="removeModal">
+  <div class="modal sm" role="dialog" aria-modal="true" aria-labelledby="rm-title">
+    <div class="modal-head"><div class="ttl" id="rm-title">Remove account?</div>
+      <button class="hs-btn hs-btn--ghost hs-btn--icon" aria-label="Close" data-close style="width:32px;height:32px"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0">This disconnects the account and removes it from your private accounts. It won't affect any team or organization, and you can reconnect it later.</p>
+      <div class="assumption">ASSUMPTION (pending Deep): only the owner can remove their own private account; reversible via reconnect.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="hs-btn hs-btn--ghost" data-close>Cancel</button>
+      <button class="hs-btn hs-btn--primary" id="confirmRemoveBtn">Remove account</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"><span class="material-symbols-outlined">check_circle</span><span id="toastMsg">Done</span></div>
+
+<script>
+(function(){
+  var pendingRemoveRow = null;
+  function toast(msg){ var t=document.getElementById('toast'); document.getElementById('toastMsg').textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2200); }
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function closeModals(){ document.querySelectorAll('.scrim.open').forEach(function(s){s.classList.remove('open');}); }
+  function syncEmpty(){
+    var list=document.getElementById('privList'), empty=document.getElementById('privEmpty');
+    var rows=list.querySelectorAll('.sa-row').length;
+    list.style.display = rows ? '' : 'none';
+    empty.style.display = rows ? 'none' : '';
+    var cnt=list.querySelector('.priv-head span:last-child');
+    if(cnt) cnt.textContent = rows + (rows===1?' account':' accounts');
+  }
+  function reconnectRow(row){
+    if(!row) return;
+    row.dataset.status='connected';
+    var badges=row.querySelector('.sa-badges');
+    if(badges){
+      var neg=badges.querySelector('.hs-badge--negative'); if(neg) neg.remove();
+      var rcb=badges.querySelector('[data-act="reconnect"]'); if(rcb) rcb.remove();
+      if(!badges.querySelector('.hs-badge--positive')){ var c=document.createElement('span'); c.className='hs-badge hs-badge--positive'; c.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Connected'; badges.appendChild(c); }
+    }
+    toast('Account reconnected');
+  }
+
+  document.getElementById('netList').addEventListener('click', function(e){
+    var li = e.target.closest('.li'); if(!li) return;
+    document.querySelectorAll('#netList .li').forEach(function(x){x.classList.remove('selected'); x.setAttribute('aria-selected','false'); x.querySelector('.hs-radio').classList.remove('is-on');});
+    li.classList.add('selected'); li.setAttribute('aria-selected','true'); li.querySelector('.hs-radio').classList.add('is-on');
+  });
+
+  document.body.addEventListener('click', function(e){
+    var opener = e.target.closest('[data-open]'); if(opener){ openModal(opener.dataset.open); return; }
+    if(e.target.closest('[data-close]')){ closeModals(); return; }
+    if(e.target.classList && e.target.classList.contains('scrim')){ closeModals(); return; }
+    var rc = e.target.closest('[data-act="reconnect"]');
+    if(rc && !rc.closest('.rowmenu') && rc.closest('.sa-row')){ reconnectRow(rc.closest('.sa-row')); return; }
+    var more = e.target.closest('.rowmore');
+    if(more){
+      var row = more.closest('.sa-row');
+      var existing = row.querySelector('.rowmenu');
+      document.querySelectorAll('.rowmenu.open').forEach(function(m){ if(m!==existing) m.classList.remove('open'); });
+      if(existing){ existing.classList.toggle('open'); return; }
+      var menu = document.createElement('div'); menu.className='rowmenu open';
+      var disconnected = row.dataset.status==='disconnected';
+      menu.innerHTML = (disconnected?'<button data-act="reconnect"><span class="material-symbols-outlined">link</span>Reconnect</button>':'') +
+                       '<button data-act="remove"><span class="material-symbols-outlined">delete</span>Remove account</button>';
+      row.appendChild(menu);
+      menu.addEventListener('click', function(ev){
+        var b = ev.target.closest('button'); if(!b) return; menu.classList.remove('open');
+        if(b.dataset.act==='reconnect'){ reconnectRow(row); }
+        else { pendingRemoveRow = row; openModal('removeModal'); }
+      });
+      return;
+    }
+    if(!e.target.closest('.rowmenu')) document.querySelectorAll('.rowmenu.open').forEach(function(m){m.classList.remove('open');});
+  });
+
+  document.getElementById('connectBtn').addEventListener('click', function(){
+    var sel = document.querySelector('#netList .li.selected');
+    var net = sel.dataset.net, icon = sel.dataset.icon;
+    var handle = '@robin-new.'+net.toLowerCase();
+    var row = document.createElement('div');
+    row.className='sa-row'; row.dataset.status='connected'; row.dataset.name=handle;
+    row.innerHTML = '<span class="av"><span class="material-symbols-outlined">person</span><span class="netbadge"><span class="material-symbols-outlined">'+icon+'</span></span></span>'+
+      '<div class="sa-info"><div class="sa-name">'+handle+'</div><div class="sa-sub">'+net+' · only you can post to this</div><div class="sa-badges"><span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div></div>'+
+      '<button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn rowmore" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button>';
+    document.getElementById('privList').appendChild(row);
+    syncEmpty(); closeModals(); toast('Private account connected');
+  });
+
+  document.getElementById('confirmRemoveBtn').addEventListener('click', function(){
+    if(pendingRemoveRow){ pendingRemoveRow.remove(); pendingRemoveRow=null; }
+    syncEmpty(); closeModals(); toast('Account removed');
+  });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModals(); });
+})();
+</script>
+<script src="option-switcher.js"></script>
+<script src="banner.js"></script>
+<script src="nav.js"></script>
+<script src="profile-menu.js"></script>
+<script src="a11y.js"></script>
+</body></html>

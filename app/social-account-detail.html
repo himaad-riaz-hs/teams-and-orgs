@@ -1,0 +1,231 @@
+<!doctype html>
+<!-- Suite Settings · Social account detail (access surface, staging parity). ID-5792 note: a PRIVATE account hides "Assign to teams" (owner-only). -->
+<html lang="en"><head><script>if(sessionStorage.getItem('ssAuthed')!=='1')location.replace('../index.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin settings · Social account</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../templates/src/suite-shell.css">
+<link rel="stylesheet" href="../templates/src/suite-drawer.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0..200&display=block">
+<style>
+  html, body { margin: 0; background: var(--bento-theme-color-bg-app); color: var(--bento-theme-color-text-base); }
+  body { font: var(--hs-type-body-md); -webkit-font-smoothing: antialiased; }
+  .suite-main { background: var(--bento-theme-color-bg-surface-recessed) !important; overflow-y: auto; }
+  .hs-tabs .hs-tab { text-decoration: none !important; }
+  .hs-tabs .hs-tab.is-active::after { background: var(--bento-theme-color-text-base) !important; left:0 !important; right:0 !important; }
+  .org-switch { display:flex; align-items:center; gap:8px; height:40px; margin:4px 0 8px; padding:0 10px; border-radius:8px; border:0; background:transparent; cursor:pointer; width:100%; box-sizing:border-box; }
+  .org-switch .nm { font: var(--hs-type-body-md-b); flex:1; text-align:left; }
+  .page-top { display:flex; align-items:center; gap:14px; padding:22px 32px 14px; }
+  .page-top .back { width:32px; height:32px; border:0; background:transparent; border-radius:999px; display:grid; place-items:center; cursor:pointer; color:var(--bento-theme-color-icon-base); flex-shrink:0; text-decoration:none; }
+  .page-top .back:hover { background:var(--bento-system-sys-neutral-alt-100); }
+  .acct-id { display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
+  .acct-av { width:48px; height:48px; border-radius:999px; background:var(--bento-system-sys-neutral-alt-300); color:var(--bento-theme-color-icon-base); display:grid; place-items:center; font:var(--hs-type-meta-b); position:relative; flex-shrink:0; }
+  .acct-av .ps { font-size:28px; font-variation-settings:'FILL' 1; }
+  .acct-av .netbadge { position:absolute; right:-2px; bottom:-2px; width:20px; height:20px; border-radius:999px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); display:grid; place-items:center; }
+  .acct-av .netbadge .material-symbols-outlined { font-size:12px; color:var(--bento-theme-color-icon-base); }
+  .acct-name { font: var(--hs-type-title-sub); margin: 0; }
+  .acct-meta { display:flex; align-items:center; gap:10px; font: var(--hs-type-body-sm); color: var(--bento-theme-color-text-subtle); margin-top:2px; }
+  .page-top .acts { display:flex; align-items:center; gap:8px; }
+  .tabs-wrap { padding:0 32px; }
+  .tabpanel { margin:16px 32px 48px; }
+  .tab-head { font: var(--hs-type-body-md); color: var(--bento-theme-color-text-subtle); margin:16px 0 12px; }
+  .tab-head b { color: var(--bento-theme-color-text-base); }
+  .panel { background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; overflow:hidden; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; padding:14px 20px; font:var(--hs-type-meta-b); color:var(--bento-theme-color-text-subtle); border-bottom:1px solid var(--bento-theme-color-border-subtle); font-weight:700; }
+  td { padding:16px 20px; border-bottom:1px solid var(--bento-theme-color-border-subtle); font:var(--hs-type-body-md); vertical-align:middle; }
+  .menuwrap { position:relative; }
+  .detailmenu { position:absolute; right:0; top:calc(100% + 4px); z-index:30; min-width:224px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); border-radius:8px; box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); padding:4px; }
+  .detailmenu[hidden] { display:none; }
+  .detailmenu button { display:flex; align-items:center; gap:10px; width:100%; border:0; background:transparent; cursor:pointer; padding:10px 12px; border-radius:6px; font:var(--hs-type-body-md); color:var(--bento-theme-color-text-base); text-align:left; }
+  .detailmenu button:hover { background:var(--bento-component-list-item-fill-hovered); }
+  .detailmenu .material-symbols-outlined { font-size:18px; color:var(--bento-theme-color-icon-base); }
+  #detailToast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); z-index:200; display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; background:var(--bento-theme-color-bg-surface); border:1px solid var(--bento-theme-color-border-subtle); box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; }
+  #detailToast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  #detailToast .material-symbols-outlined { color:var(--bento-system-sys-positive-600); }
+  tr:last-child td { border-bottom:0; }
+  tr:hover td { background:var(--bento-theme-color-bg-surface-hovered); }
+  .team-cell { display:flex; align-items:center; gap:12px; font:var(--hs-type-body-md-b); }
+  .tc-av { width:32px; height:32px; border-radius:8px; display:grid; place-items:center; font:var(--hs-type-meta-b); background:var(--bento-system-sys-neutral-alt-100); color:var(--bento-theme-color-text-subtle); flex-shrink:0; }
+  .subtle { color:var(--bento-theme-color-text-subtle); }
+  .stack { display:flex; }
+  .stack .pav { width:32px; height:32px; border-radius:999px; background:var(--bento-system-sys-neutral-alt-300); display:grid; place-items:center; border:2px solid var(--bento-theme-color-bg-surface); margin-left:-8px; color:var(--bento-theme-color-icon-base); }
+  .stack .pav:first-child { margin-left:0; }
+  .stack .pav .material-symbols-outlined { font-size:20px; font-variation-settings:'FILL' 1; }
+</style>
+</head>
+<body>
+<div class="suite-app">
+  <aside class="suite-rail" aria-label="Hootsuite products">
+    <div class="main">
+      <a class="suite-brand" href="overview.html" aria-label="Home"><img src="../assets/hootsuite-owly-small.png" alt=""><span class="lbl">Home</span></a>
+      <a class="suite-navbtn" data-product="perch" href="#"><span class="circle"><span class="material-symbols-outlined">calendar_month</span></span><span class="lbl">Perch</span></a>
+      <a class="suite-navbtn" data-product="nest" href="#"><span class="circle"><span class="material-symbols-outlined">inbox</span></span><span class="lbl">Nest</span></a>
+      <a class="suite-navbtn" data-product="lumen" href="#"><span class="circle"><span class="material-symbols-outlined">graphic_eq</span></span><span class="lbl">Lumen</span></a>
+      <a class="suite-navbtn" data-product="parliament" href="#"><span class="circle"><span class="material-symbols-outlined">groups</span></span><span class="lbl">Parliament</span></a>
+      <a class="suite-navbtn" data-product="wisdom" href="#"><span class="circle"><span class="material-symbols-outlined">auto_awesome</span></span><span class="lbl">Wisdom</span></a>
+    </div>
+    <div class="others">
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Analytics"><span class="circle"><span class="material-symbols-outlined">bar_chart</span></span></button>
+      <button class="suite-navbtn util ne-tooltipbtn" aria-label="Notifications"><span class="circle"><span class="material-symbols-outlined">notifications_none</span></span></button>
+      <span class="avatar" aria-hidden="true">HR</span>
+    </div>
+  </aside>
+
+  <aside class="suite-drawer" aria-label="Admin settings navigation">
+    <div class="sd-head">Admin settings
+      <button class="sd-collapse ne-tooltipbtn" aria-label="Collapse navigation"><span class="material-symbols-outlined">keyboard_double_arrow_left</span></button>
+    </div>
+    <div class="sd-body">
+      <button class="org-switch" aria-haspopup="listbox" aria-label="Switch organization, current: Publisher Organization">
+        <span class="hs-avatar" style="width:32px;height:32px;background:var(--hs-cat-5-bg);color:var(--hs-cat-5-fg);font:var(--hs-type-meta-b)"><img src="https://assets.hootsuite.com/avatars_production/organization/9436451_509a6bcd8b646a938d7169e8f82b29ff_monty.jpg" alt="" style="width:100%;height:100%;border-radius:999px;object-fit:cover"></span>
+        <span class="nm">Publisher Organization</span>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <div class="sd-group">Organization</div>
+      <a class="sd-item" href="overview.html">Overview</a>
+      <a class="sd-item" href="teams.html">Teams</a>
+      <a class="sd-item" href="members.html">Members</a>
+      <a class="sd-item on" href="social-accounts.html" aria-current="page">Social accounts</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Settings</a>
+      <div class="sd-group">Publishing</div>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Tags</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Campaigns</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Link settings</a>
+      <a class="sd-item" href="#" aria-disabled="true" style="color:var(--bento-theme-color-text-disabled);cursor:default">Suspended posts</a>
+    </div>
+  </aside>
+
+  <main class="suite-main">
+    <div class="page-top">
+      <a class="back ne-tooltipbtn" href="social-accounts.html" aria-label="Back to social accounts"><span class="material-symbols-outlined">chevron_left</span></a>
+      <div class="acct-id">
+        <span class="acct-av"><span class="material-symbols-outlined ps">person</span><span class="netbadge"><span class="material-symbols-outlined">cloud</span></span></span>
+        <div>
+          <h1 class="acct-name">@publisher.bsky.social</h1>
+          <div class="acct-meta">Bluesky <span>·</span> <span class="hs-badge hs-badge--positive"><span class="material-symbols-outlined">check_circle</span>Connected</span></div>
+        </div>
+      </div>
+      <div class="acts">
+        <button class="hs-btn hs-btn--outlined" id="assignTeamsBtn"><span class="material-symbols-outlined">groups</span>Assign to teams</button>
+        <button class="hs-btn hs-btn--outlined" id="assignMembersBtn"><span class="material-symbols-outlined">person_add</span>Assign to members</button>
+        <div class="menuwrap">
+          <button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" id="detailMoreBtn" aria-label="More actions" aria-haspopup="menu" aria-expanded="false" aria-controls="detailMenu"><span class="material-symbols-outlined" aria-hidden="true">more_horiz</span></button>
+          <div class="detailmenu" id="detailMenu" role="menu" aria-label="Account actions" hidden>
+            <button role="menuitem"><span class="material-symbols-outlined" aria-hidden="true">settings</span>Edit settings</button>
+            <button role="menuitem"><span class="material-symbols-outlined" aria-hidden="true">link</span>Reconnect</button>
+            <button role="menuitem"><span class="material-symbols-outlined" aria-hidden="true">delete</span>Delete from organization</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-wrap">
+      <nav class="hs-tabs" aria-label="Access" id="accessTabs">
+        <a class="hs-tab is-active" data-tab="teams" aria-current="page">Teams</a>
+        <a class="hs-tab" data-tab="members">Members</a>
+      </nav>
+    </div>
+
+    <div class="tabpanel" id="teamsPanel">
+      <div class="tab-head"><b>3 teams.</b> Manage teams and permissions for this social account.</div>
+      <div class="panel">
+        <table>
+          <thead><tr><th scope="col" style="width:34%">Team</th><th scope="col">Assigned on</th><th scope="col">Team admins</th><th scope="col">Members</th><th scope="col">Social accounts</th><th scope="col" style="text-align:right">Actions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="team-cell"><span class="tc-av">PT</span>Publisher Team</div></td><td class="subtle">Jan 4, 2024</td><td><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>440 members</td><td>61 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+            <tr><td><div class="team-cell"><span class="tc-av">NT</span>New team</div></td><td class="subtle">May 1, 2024</td><td><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>17 members</td><td>8 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+            <tr><td><div class="team-cell"><span class="tc-av">CL</span>Cage Lyfe</div></td><td class="subtle">Feb 8, 2019</td><td><div class="stack"><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span><span class="pav"><span class="material-symbols-outlined">person</span></span></div></td><td>30 members</td><td>2 accounts</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-head" style="display:none; margin-top:18px; font: var(--hs-type-meta); color: var(--hs-fg-secondary); font-family: ui-monospace, monospace">ID-5792: open with ?owner=private (e.g. from the Private accounts section) to see the private variant: no "Assign to teams" / "Assign to members", shown as Private · only you. That ownership rule encodes private vs team-shared.</div>
+    </div>
+      <div class="tabpanel" id="membersPanel" hidden>
+        <div class="tab-head"><b>3 members</b> have access to this social account.</div>
+        <div class="panel">
+          <table>
+            <thead><tr><th scope="col" style="width:42%">Member</th><th scope="col">Access</th><th scope="col">Added on</th><th scope="col" style="text-align:right">Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div class="team-cell"><span class="tc-av">PQ</span>pat.quinn@example.com</div></td><td>Publish</td><td class="subtle">Jan 4, 2024</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+              <tr><td><div class="team-cell"><span class="tc-av">JB</span>Jordan Blake</div></td><td>Publish</td><td class="subtle">Mar 2, 2024</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+              <tr><td><div class="team-cell"><span class="tc-av">SM</span>Lee Carter</div></td><td>Draft</td><td class="subtle">May 1, 2024</td><td style="text-align:right"><button class="hs-btn hs-btn--ghost hs-btn--icon ne-tooltipbtn" aria-label="More actions"><span class="material-symbols-outlined">more_horiz</span></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tabpanel" id="privPanel" hidden>
+        <div class="panel" style="padding:32px; text-align:center">
+          <div style="width:48px;height:48px;border-radius:999px;background:var(--bento-system-sys-neutral-alt-300);display:grid;place-items:center;margin:0 auto 14px"><span class="material-symbols-outlined" style="font-size:26px;color:var(--bento-theme-color-icon-base)">lock</span></div>
+          <div style="font:var(--hs-type-title-sub);margin-bottom:6px">Private account · only you</div>
+          <p style="font:var(--hs-type-body-md);color:var(--bento-theme-color-text-subtle);max-width:480px;margin:0 auto">Only you can see and publish to this account. It isn't shared with any team or organization, so it can't be assigned to teams or members.</p>
+        </div>
+      </div>
+  </main>
+</div>
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  if (params.get('owner') !== 'private') return;
+  ['assignTeamsBtn','assignMembersBtn'].forEach(function(id){ var b=document.getElementById(id); if(b) b.style.display='none'; });
+  var tabs=document.querySelector('.tabs-wrap'); if(tabs) tabs.style.display='none';
+  var tp=document.querySelector('.tabpanel:not(#privPanel)'); if(tp) tp.style.display='none';
+  var pp=document.getElementById('privPanel'); if(pp) pp.hidden=false;
+  var nm=document.querySelector('.acct-name'); if(nm) nm.textContent='@robin.bsky.social';
+  var meta=document.querySelector('.acct-meta');
+  if(meta){ var b=document.createElement('span'); b.className='hs-badge hs-badge--discovery'; b.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">lock</span>Private'; meta.appendChild(document.createTextNode(' ')); meta.appendChild(b); }
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('detailMoreBtn'), menu = document.getElementById('detailMenu');
+  if (!btn || !menu) return;
+  function open(){ menu.hidden = false; btn.setAttribute('aria-expanded','true'); var f = menu.querySelector('button'); if (f) f.focus(); }
+  function close(focusBtn){ menu.hidden = true; btn.setAttribute('aria-expanded','false'); if (focusBtn) btn.focus(); }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); if (menu.hidden) open(); else close(true); });
+  document.addEventListener('click', function(e){ if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) close(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !menu.hidden) close(true); });
+  menu.addEventListener('keydown', function(e){
+    var items = [].slice.call(menu.querySelectorAll('[role=menuitem]'));
+    var i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown'){ e.preventDefault(); items[(i+1)%items.length].focus(); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); items[(i-1+items.length)%items.length].focus(); }
+    else if (e.key === 'Tab'){ close(false); }
+  });
+})();
+</script>
+<div id="detailToast" role="status" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span><span id="detailToastMsg">Done</span></div>
+<script>
+(function(){
+  var t = document.getElementById('detailToast');
+  function toast(msg){ if(!t) return; document.getElementById('detailToastMsg').textContent = msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2200); }
+  document.addEventListener('click', function(e){
+    var assign = e.target.closest('#assignTeamsBtn,#assignMembersBtn');
+    if (assign){ toast(assign.id === 'assignTeamsBtn' ? 'Assign to teams: opens a team picker (demo)' : 'Assign to members: opens a member picker (demo)'); return; }
+    var mi = e.target.closest('#detailMenu [role=menuitem]');
+    if (mi){ var lbl = (mi.lastChild && mi.lastChild.textContent || mi.textContent).trim(); toast(lbl + ' (demo)'); var menu = document.getElementById('detailMenu'), btn = document.getElementById('detailMoreBtn'); if (menu) menu.hidden = true; if (btn){ btn.setAttribute('aria-expanded','false'); btn.focus(); } }
+  });
+})();
+</script>
+<script src="banner.js"></script>
+<script src="nav.js"></script>
+<script>
+(function(){
+  var tabs = document.getElementById('accessTabs'); if (!tabs) return;
+  tabs.addEventListener('click', function(e){
+    var t = e.target.closest('.hs-tab'); if (!t) return;
+    tabs.querySelectorAll('.hs-tab').forEach(function(x){ x.classList.remove('is-active'); x.removeAttribute('aria-current'); });
+    t.classList.add('is-active'); t.setAttribute('aria-current','page');
+    var which = t.dataset.tab;
+    var tp = document.getElementById('teamsPanel'), mp = document.getElementById('membersPanel');
+    if (tp) tp.hidden = which !== 'teams';
+    if (mp) mp.hidden = which !== 'members';
+  });
+})();
+</script>
+<script src="tabs.js"></script>
+<script src="profile-menu.js"></script>
+<script src="a11y.js"></script>
+</body></html>
