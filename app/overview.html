@@ -137,6 +137,13 @@
   .tg .ti.active .check { display: inline-flex; }
   .ov-filter { display:flex; align-items:center; gap:10px; margin:10px 0 4px; }
   .ov-filter .ownlbl { font: var(--hs-type-meta-b); color: var(--bento-theme-color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+  .ov-dest-tabs .hs-tab { display:inline-flex; align-items:center; gap:6px; }
+  .ov-dest-tabs .hs-tab .material-symbols-outlined { font-size:18px; }
+  /* Connection status as a shape-distinct icon (check vs error), colour reinforcing, label via tooltip + aria (Hill: reduce row text, kept colourblind-safe per WCAG 1.4.1) */
+  .status-ic { display:inline-flex; align-items:center; }
+  .status-ic .material-symbols-outlined { font-size:20px; font-variation-settings:'FILL' 1; }
+  .status-ic.ok .material-symbols-outlined { color: var(--bento-theme-color-icon-positive); }
+  .status-ic.err .material-symbols-outlined { color: var(--bento-theme-color-icon-negative); }
 </style>
 </head>
 <body>
@@ -252,43 +259,44 @@
 
         <section class="panel" id="ovSocialPanel">
           <div class="panel-head"><h3>Social accounts</h3><a class="viewall" href="all-social-accounts.html">View all social accounts</a></div>
-          <!-- LENS 1 (destination) = PRIMARY, per Hill's review round 2: All/Team/Private ABOVE connection status. See + filter private here without navigating away (ID-5792). DEV-EFFORT FLAG: net-new filter (none in T&O today) — validate cost with eng. Shown in Option C. -->
+          <!-- Lens hierarchy (Hill review 3): destination = TABS (primary), connection status = FILTER (secondary). Matches the All social accounts table. Shown in Option C. -->
+          <nav class="hs-tabs ov-dest-tabs" aria-label="Account destination" id="ovDestTabs" data-opt="C">
+            <a class="hs-tab is-active" role="button" tabindex="0" data-owner="all" aria-current="page">All</a>
+            <a class="hs-tab" role="button" tabindex="0" data-owner="team"><span class="material-symbols-outlined" aria-hidden="true">groups</span>Team</a>
+            <a class="hs-tab" role="button" tabindex="0" data-owner="private"><span class="material-symbols-outlined" aria-hidden="true">lock</span>Private</a>
+          </nav>
           <div class="ov-filter" data-opt="C">
-            <span class="ownlbl">Show</span>
-            <div class="tg" role="radiogroup" aria-label="Filter social accounts by destination" id="ovOwnFilter">
-              <button class="ti opt active" role="radio" aria-checked="true" data-owner="all"><span class="material-symbols-outlined check">check</span>All</button>
-              <button class="ti opt" role="radio" aria-checked="false" data-owner="team"><span class="material-symbols-outlined check">check</span><span class="material-symbols-outlined lead">groups</span>Team</button>
-              <button class="ti opt" role="radio" aria-checked="false" data-owner="private"><span class="material-symbols-outlined check">check</span><span class="material-symbols-outlined lead">lock</span>Private</button>
+            <span class="ownlbl">Status</span>
+            <div class="tg" role="radiogroup" aria-label="Filter by connection status" id="ovStatusFilter">
+              <button class="ti opt active" role="radio" aria-checked="true" data-status="all"><span class="material-symbols-outlined check">check</span>All</button>
+              <button class="ti opt" role="radio" aria-checked="false" data-status="connected"><span class="material-symbols-outlined check">check</span>Connected</button>
+              <button class="ti opt" role="radio" aria-checked="false" data-status="disconnected"><span class="material-symbols-outlined check">check</span>Disconnected</button>
             </div>
           </div>
-          <nav class="hs-tabs" aria-label="Connection status">
-            <a class="hs-tab is-active" aria-current="page">Disconnected (36)</a>
-            <a class="hs-tab">Connected (25)</a>
-          </nav>
           <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-fb">Facebook <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
           <div id="ov-fb">
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">Sky Harper</div><div class="sub">Facebook</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">Hoot JD</div><div class="sub">Facebook</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">S-test B-test</div><div class="sub">Facebook</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges" data-status="disconnected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">Sky Harper</div><div class="sub">Facebook</div><div class="li-badges"><span class="status-ic err" role="img" aria-label="Disconnected" title="Disconnected"><span class="material-symbols-outlined" aria-hidden="true">error</span></span></div></div></div>
+            <div class="li-row has-badges" data-status="disconnected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">Hoot JD</div><div class="sub">Facebook</div><div class="li-badges"><span class="status-ic err" role="img" aria-label="Disconnected" title="Disconnected"><span class="material-symbols-outlined" aria-hidden="true">error</span></span></div></div></div>
+            <div class="li-row has-badges" data-status="connected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/facebook.svg" alt=""></span></span><div><div class="nm">S-test B-test</div><div class="sub">Facebook</div><div class="li-badges"><span class="status-ic ok" role="img" aria-label="Connected" title="Connected"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span></div></div></div>
             <a class="viewall gv-link" href="all-social-accounts.html">View all Facebook accounts</a>
           </div>
           <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-ig">Instagram Business <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
           <div id="ov-ig">
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/instagram.svg" alt=""></span></span><div><div class="nm">@publisher.team</div><div class="sub">Instagram Business</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/instagram.svg" alt=""></span></span><div><div class="nm">@publisher.creative</div><div class="sub">Instagram Business</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges" data-status="connected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/instagram.svg" alt=""></span></span><div><div class="nm">@publisher.team</div><div class="sub">Instagram Business</div><div class="li-badges"><span class="status-ic ok" role="img" aria-label="Connected" title="Connected"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span></div></div></div>
+            <div class="li-row has-badges" data-status="disconnected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/instagram.svg" alt=""></span></span><div><div class="nm">@publisher.creative</div><div class="sub">Instagram Business</div><div class="li-badges"><span class="status-ic err" role="img" aria-label="Disconnected" title="Disconnected"><span class="material-symbols-outlined" aria-hidden="true">error</span></span></div></div></div>
             <a class="viewall gv-link" href="all-social-accounts.html">View all Instagram Business accounts</a>
           </div>
           <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-li">LinkedIn <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
           <div id="ov-li">
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/linkedin.svg" alt=""></span></span><div><div class="nm">Publisher Team</div><div class="sub">LinkedIn Page</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges" data-status="connected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><img src="../assets/icons/linkedin.svg" alt=""></span></span><div><div class="nm">Publisher Team</div><div class="sub">LinkedIn Page</div><div class="li-badges"><span class="status-ic ok" role="img" aria-label="Connected" title="Connected"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span></div></div></div>
             <a class="viewall gv-link" href="all-social-accounts.html">View all LinkedIn accounts</a>
           </div>
           <div class="sec-acc" role="button" tabindex="0" aria-expanded="true" aria-controls="ov-bluesky">Bluesky <span class="material-symbols-outlined">keyboard_arrow_up</span></div>
           <div id="ov-bluesky">
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">mjrl73.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">pubprodone.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
-            <div class="li-row has-badges"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">hootps.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
-            <div class="li-row has-badges" data-owner="private" data-opt="A C"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">robin.bsky.social</div><div class="sub">Bluesky · only you can post to this</div><div class="li-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="hs-badge hs-badge--negative">Disconnected</span></div></div></div>
+            <div class="li-row has-badges" data-status="connected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">mjrl73.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="status-ic ok" role="img" aria-label="Connected" title="Connected"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span></div></div></div>
+            <div class="li-row has-badges" data-status="disconnected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">pubprodone.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="status-ic err" role="img" aria-label="Disconnected" title="Disconnected"><span class="material-symbols-outlined" aria-hidden="true">error</span></span></div></div></div>
+            <div class="li-row has-badges" data-status="connected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">hootps.bsky.social</div><div class="sub">Bluesky</div><div class="li-badges"><span class="status-ic ok" role="img" aria-label="Connected" title="Connected"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span></div></div></div>
+            <div class="li-row has-badges" data-owner="private" data-opt="A C" data-status="disconnected"><span class="av netav"><span class="material-symbols-outlined ps">person</span><span class="nb"><span class="material-symbols-outlined" style="font-size:11px;color:var(--bento-theme-color-icon-base)">cloud</span></span></span><div><div class="nm">robin.bsky.social</div><div class="sub">Bluesky · only you can post to this</div><div class="li-badges"><span class="hs-badge hs-badge--discovery"><span class="material-symbols-outlined">lock</span>Private</span><span class="status-ic err" role="img" aria-label="Disconnected" title="Disconnected"><span class="material-symbols-outlined" aria-hidden="true">error</span></span></div></div></div>
             <a class="viewall gv-link" href="all-social-accounts.html">View all Bluesky accounts</a>
           </div>
           <a class="viewall gv-link" data-opt="B" href="my-social-accounts.html">View your private accounts</a>
@@ -417,36 +425,50 @@ document.querySelectorAll('.sec-acc[aria-controls]').forEach(function(h){
 </script>
 <script>
 (function(){
-  // Overview · Social accounts DESTINATION filter (Lens 3). Scoped to the Social accounts panel only.
+  // Overview · Social accounts. Lens hierarchy (Hill review 3): destination = TABS (primary), status = FILTER (secondary). Scoped to the panel.
   var panel = document.getElementById('ovSocialPanel'); if(!panel) return;
-  var filter = document.getElementById('ovOwnFilter'); if(!filter) return;
-  var owner = 'all';
+  var destTabs = document.getElementById('ovDestTabs');
+  var statusFilter = document.getElementById('ovStatusFilter');
+  var owner = 'all', status = 'all';
   function apply(){
     panel.querySelectorAll('.sec-acc[aria-controls]').forEach(function(head){
       var body = document.getElementById(head.getAttribute('aria-controls')); if(!body) return;
       var shown = 0;
       body.querySelectorAll('.li-row').forEach(function(r){
         var ro = r.getAttribute('data-owner') || 'team';
-        var ok = (owner==='all') || (ro===owner);
+        var st = r.getAttribute('data-status') || 'connected';
+        var ok = (owner==='all' || ro===owner) && (status==='all' || st===status);
         r.style.display = ok ? '' : 'none';
         if(ok) shown++;
       });
-      // hide the network sub-heading + group when the destination filter empties it
+      // hide a network sub-heading + group when the filters empty it
       head.style.display = shown ? '' : 'none';
       body.style.display = shown ? '' : 'none';
     });
   }
-  filter.addEventListener('click', function(e){
-    var b = e.target.closest('.opt'); if(!b) return;
-    filter.querySelectorAll('.opt').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-checked','false'); });
-    b.classList.add('active'); b.setAttribute('aria-checked','true');
-    owner = b.getAttribute('data-owner'); apply();
-  });
-  // Only Option C exposes the filter; reset to All when switching away from C.
+  if(destTabs){
+    destTabs.addEventListener('click', function(e){
+      var t = e.target.closest('.hs-tab'); if(!t) return;
+      destTabs.querySelectorAll('.hs-tab').forEach(function(x){ x.classList.remove('is-active'); x.removeAttribute('aria-current'); });
+      t.classList.add('is-active'); t.setAttribute('aria-current','page');
+      owner = t.getAttribute('data-owner'); apply();
+    });
+    destTabs.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ var t=e.target.closest('.hs-tab'); if(t){ e.preventDefault(); t.click(); } } });
+  }
+  if(statusFilter){
+    statusFilter.addEventListener('click', function(e){
+      var b = e.target.closest('.opt'); if(!b) return;
+      statusFilter.querySelectorAll('.opt').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-checked','false'); });
+      b.classList.add('active'); b.setAttribute('aria-checked','true');
+      status = b.getAttribute('data-status'); apply();
+    });
+  }
+  // Only Option C exposes these controls; reset when switching away from C.
   document.addEventListener('optionchange', function(e){
     if(e.detail && e.detail.option!=='C'){
-      owner='all';
-      filter.querySelectorAll('.opt').forEach(function(x){ var on=x.getAttribute('data-owner')==='all'; x.classList.toggle('active',on); x.setAttribute('aria-checked', on?'true':'false'); });
+      owner='all'; status='all';
+      if(destTabs) destTabs.querySelectorAll('.hs-tab').forEach(function(x){ var on=x.getAttribute('data-owner')==='all'; x.classList.toggle('is-active',on); if(on) x.setAttribute('aria-current','page'); else x.removeAttribute('aria-current'); });
+      if(statusFilter) statusFilter.querySelectorAll('.opt').forEach(function(x){ var on=x.getAttribute('data-status')==='all'; x.classList.toggle('active',on); x.setAttribute('aria-checked', on?'true':'false'); });
     }
     apply();
   });
