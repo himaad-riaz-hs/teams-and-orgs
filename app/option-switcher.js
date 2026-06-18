@@ -9,7 +9,8 @@
   var OPTS = [
     { k:'A', nm:'Inline in list',   ds:'Private accounts interleaved in the org list with a Private badge + ownership filter.' },
     { k:'B', nm:'Member space',     ds:'Private accounts live in your own "My social accounts". T&O links to it.' },
-    { k:'C', nm:'Section in T&O',   ds:'A dedicated "Private accounts · only you" section inside Social accounts.' }
+    { k:'C', nm:'Section in T&O',   ds:'A dedicated "Private accounts · only you" section inside Social accounts.' },
+    { k:'D', nm:'C + status icons', ds:'Same as C, but Connected and Disconnected show as an icon only (no text), per Hill\'s idea.' }
   ];
   function read(){ try { return localStorage.getItem(KEY) || 'C'; } catch(e){ return 'C'; } }
   function write(k){ try { localStorage.setItem(KEY, k); } catch(e){} }
@@ -22,6 +23,9 @@
     + 'body[data-option="A"] [data-opt]:not([data-opt~="A"]),'
     + 'body[data-option="B"] [data-opt]:not([data-opt~="B"]),'
     + 'body[data-option="C"] [data-opt]:not([data-opt~="C"]){display:none !important;}'
+    + 'body[data-option="D"] [data-opt]:not([data-opt~="D"]):not([data-opt~="C"]){display:none !important;}' /* D inherits C visibility */
+    + 'body[data-option="D"] .status-badge .lbl{display:none;}'                                            /* D: status = icon only (Hill) */
+    + 'body[data-option="D"] .status-badge{width:28px;min-width:28px;padding:0;justify-content:center;gap:0;}'
     + '#optfab{position:fixed;right:20px;bottom:20px;z-index:9000;}'
     + '#optfab .fab{position:relative;width:44px;height:44px;border-radius:999px;border:1px solid var(--bento-theme-color-border-subtle);background:var(--bento-theme-color-bg-surface);color:var(--bento-theme-color-text-base);box-shadow:var(--bento-theme-elevation-shadow-overlay-bottom);display:grid;place-items:center;cursor:pointer;opacity:.5;transition:opacity .15s;}'
     + '#optfab .fab:hover,#optfab.open .fab{opacity:1;}'
